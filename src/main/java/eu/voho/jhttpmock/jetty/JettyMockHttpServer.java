@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Implementation of a HTTP mock server using <a href="http://www.eclipse.org/jetty/">Jetty</a>.
+ */
 public class JettyMockHttpServer extends AbstractCloseableMockHttpServer {
     private final int port;
     private final Server server;
@@ -42,7 +45,7 @@ public class JettyMockHttpServer extends AbstractCloseableMockHttpServer {
         try {
             this.server.stop();
         } catch (Exception e) {
-            throw new IOException("Cannot stop Jetty server.");
+            throw new RuntimeException("Cannot stop Jetty server.", e);
         }
     }
 }

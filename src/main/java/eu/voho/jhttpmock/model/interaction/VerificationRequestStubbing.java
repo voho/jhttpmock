@@ -9,9 +9,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by vojta on 16/04/2017.
- */
 public class VerificationRequestStubbing implements RequestStubbing {
     private MockInteractions mockInteractions;
     private RequestStubbingData requestStubbingData = new RequestStubbingData();
@@ -21,9 +18,27 @@ public class VerificationRequestStubbing implements RequestStubbing {
     }
 
     @Override
-    public RequestStubbing custom(final Matcher<RequestWrapper> requestWrapper) {
-        // TODO
-        return null;
+    public RequestStubbing withMethod(Matcher<String> methodMatcher) {
+        requestStubbingData.setMethodMatcher(methodMatcher);
+        return this;
+    }
+
+    @Override
+    public RequestStubbing withHeader(Matcher<String> nameMatcher, Matcher<Iterable<String>> valueMatcher) {
+        requestStubbingData.addHeaderMatcher(nameMatcher, valueMatcher);
+        return this;
+    }
+
+    @Override
+    public RequestStubbing withQueryParameter(Matcher<String> nameMatcher, Matcher<Iterable<String>> valueMatcher) {
+        requestStubbingData.addQueryParameterMatcher(nameMatcher, valueMatcher);
+        return this;
+    }
+
+    @Override
+    public RequestStubbing withBody(Matcher<String> bodyMatcher) {
+        requestStubbingData.setBodyMatcher(bodyMatcher);
+        return this;
     }
 
     @Override

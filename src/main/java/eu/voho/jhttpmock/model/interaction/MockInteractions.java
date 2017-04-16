@@ -1,7 +1,5 @@
 package eu.voho.jhttpmock.model.interaction;
 
-import eu.voho.jhttpmock.model.interaction.RequestWrapper;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -21,7 +19,11 @@ public class MockInteractions {
         return history.stream().filter(rule).collect(Collectors.toList());
     }
 
-    public void addRequest(RequestWrapper request) {
+    public void recordRequest(RequestWrapper request) {
         this.history.add(request);
+    }
+
+    public void reset() {
+        history.clear();
     }
 }

@@ -10,6 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,24 +20,29 @@ public class BasicUseCase {
 
     @Test
     public void test() throws IOException {
-        mockHttpServerRule
-                .onRequest()
-                .withUrlEqualTo("/ping")
-                .thenRespond()
-                .withCode(201)
-                .withBody("Hello!");
+        for (int i = 0; i < 5; i++) {
+            mockHttpServerRule.reset();
 
-        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpGet get = new HttpGet("http://localhost:8081/ping");
+            mockHttpServerRule
+                    .onRequest()
+                    .withUrlEqualTo("/ping")
+                    .thenRespond()
+                    .withCode(201)
+                    .withGaussianRandomDelay(Duration.ofMillis(50), Duration.ofMillis(30))
+                    .withBody("Hello!");
 
-            try (CloseableHttpResponse response = client.execute(get)) {
-                assertThat(response.getStatusLine().getStatusCode()).isEqualTo(201);
+            try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+                HttpGet get = new HttpGet("http://localhost:8081/ping");
+
+                try (CloseableHttpResponse response = client.execute(get)) {
+                    assertThat(response.getStatusLine().getStatusCode()).isEqualTo(201);
+                }
             }
-        }
 
-        mockHttpServerRule
-                .verifyThatRequest()
-                .withUrlEqualTo("/ping")
-                .wasReceivedOnce();
+            mockHttpServerRule
+                    .verifyThatRequest()
+                    .withUrlEqualTo("/ping")
+                    .wasReceivedOnce();
+        }
     }
 }

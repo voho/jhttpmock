@@ -26,4 +26,8 @@ public class MockBehaviour {
 
         return false;
     }
+
+    public void reset() {
+        this.rules.clear();
+    }
 }

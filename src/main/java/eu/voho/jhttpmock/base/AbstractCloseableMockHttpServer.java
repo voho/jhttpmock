@@ -2,7 +2,7 @@ package eu.voho.jhttpmock.base;
 
 import eu.voho.jhttpmock.CloseableMockHttpServer;
 import eu.voho.jhttpmock.RequestStubbing;
-import eu.voho.jhttpmock.model.behaviour.BehaviourDefiningRequestStubing;
+import eu.voho.jhttpmock.model.behaviour.BehaviourDefiningRequestStubbing;
 import eu.voho.jhttpmock.model.behaviour.MockBehaviour;
 import eu.voho.jhttpmock.model.interaction.MockInteractions;
 import eu.voho.jhttpmock.model.interaction.RequestWrapper;
@@ -13,20 +13,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by vojta on 14/04/2017.
+ * Abstract base class for mock HTTP servers.
+ * Stores mock behaviour and interactions.
  */
 public abstract class AbstractCloseableMockHttpServer implements CloseableMockHttpServer {
     private final MockBehaviour behaviour;
     private final MockInteractions interactions;
 
-    public AbstractCloseableMockHttpServer() {
+    protected AbstractCloseableMockHttpServer() {
         this.behaviour = new MockBehaviour();
         this.interactions = new MockInteractions();
     }
 
     @Override
+    public void reset() {
+        this.behaviour.reset();
+        this.interactions.reset();
+    }
+
+    @Override
     public RequestStubbing onRequest() {
-        return new BehaviourDefiningRequestStubing(behaviour);
+        return new BehaviourDefiningRequestStubbing(behaviour);
     }
 
     @Override
@@ -35,9 +42,17 @@ public abstract class AbstractCloseableMockHttpServer implements CloseableMockHt
     }
 
     protected boolean handleByMock(final HttpServletRequest request, final HttpServletResponse response) {
-        final RequestWrapper requestWrapper = new RequestWrapper(request);
-        final ResponseWrapper responseWrapper = new ResponseWrapper(response);
-        interactions.addRequest(requestWrapper);
+        final RequestWrapper requestWrapper = wrapHttpRequest(request);
+        final ResponseWrapper responseWrapper = wrapHttpResponse(response);
+        interactions.recordRequest(requestWrapper);
         return behaviour.apply(requestWrapper, responseWrapper);
+    }
+
+    private ResponseWrapper wrapHttpResponse(HttpServletResponse response) {
+        return new ResponseWrapper(response);
+    }
+
+    private RequestWrapper wrapHttpRequest(HttpServletRequest request) {
+        return new RequestWrapper(request);
     }
 }
