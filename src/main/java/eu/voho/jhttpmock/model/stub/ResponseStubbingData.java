@@ -1,4 +1,6 @@
-package eu.voho.jhttpmock.model;
+package eu.voho.jhttpmock.model.stub;
+
+import eu.voho.jhttpmock.model.interaction.ResponseWrapper;
 
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -8,13 +10,13 @@ import java.util.function.Consumer;
  */
 public class ResponseStubbingData {
     private int code;
-    private String body;
+    private char[] body;
 
     public void setCode(int code) {
         this.code = code;
     }
 
-    public void setBody(String body) {
+    public void setBody(char[] body) {
         this.body = body;
     }
 

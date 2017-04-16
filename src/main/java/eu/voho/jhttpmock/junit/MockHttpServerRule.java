@@ -1,14 +1,14 @@
 package eu.voho.jhttpmock.junit;
 
+import eu.voho.jhttpmock.CloseableMockHttpServer;
 import eu.voho.jhttpmock.MockHttpServer;
 import eu.voho.jhttpmock.RequestStubbing;
-import eu.voho.jhttpmock.VerifyStubbing;
 import org.junit.rules.ExternalResource;
 
 public class MockHttpServerRule extends ExternalResource implements MockHttpServer {
-    private final MockHttpServer mockHttpServer;
+    private final CloseableMockHttpServer mockHttpServer;
 
-    public MockHttpServerRule(MockHttpServer mockHttpServer) {
+    public MockHttpServerRule(CloseableMockHttpServer mockHttpServer) {
         this.mockHttpServer = mockHttpServer;
     }
 
@@ -27,17 +27,12 @@ public class MockHttpServerRule extends ExternalResource implements MockHttpServ
     }
 
     @Override
-    public void close() throws Exception {
-        mockHttpServer.close();
-    }
-
-    @Override
     public RequestStubbing onRequest() {
         return mockHttpServer.onRequest();
     }
 
     @Override
-    public VerifyStubbing verifyThatRequest() {
+    public RequestStubbing verifyThatRequest() {
         return mockHttpServer.verifyThatRequest();
     }
 }

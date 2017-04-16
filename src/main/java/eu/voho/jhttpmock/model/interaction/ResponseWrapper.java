@@ -1,4 +1,4 @@
-package eu.voho.jhttpmock.model;
+package eu.voho.jhttpmock.model.interaction;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -17,7 +17,8 @@ public class ResponseWrapper {
         this.response.setStatus(code);
     }
 
-    public void write(String body) throws IOException {
-        this.response.getWriter().write(body);
+    public void write(char[] body) throws IOException {
+        response.getWriter().write(body);
+        response.getWriter().flush();
     }
 }

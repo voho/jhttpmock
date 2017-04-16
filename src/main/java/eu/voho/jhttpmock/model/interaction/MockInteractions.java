@@ -1,4 +1,6 @@
-package eu.voho.jhttpmock.model;
+package eu.voho.jhttpmock.model.interaction;
+
+import eu.voho.jhttpmock.model.interaction.RequestWrapper;
 
 import java.util.LinkedList;
 import java.util.List;

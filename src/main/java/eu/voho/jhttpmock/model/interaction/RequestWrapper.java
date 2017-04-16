@@ -1,4 +1,4 @@
-package eu.voho.jhttpmock.model;
+package eu.voho.jhttpmock.model.interaction;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;

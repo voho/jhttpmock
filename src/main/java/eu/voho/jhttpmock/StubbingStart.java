@@ -6,5 +6,5 @@ package eu.voho.jhttpmock;
 public interface StubbingStart {
     RequestStubbing onRequest();
 
-    VerifyStubbing verifyThatRequest();
+    RequestStubbing verifyThatRequest();
 }

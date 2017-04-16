@@ -1,6 +1,6 @@
 package eu.voho.jhttpmock.jetty;
 
-import eu.voho.jhttpmock.base.AbstractMockHttpServer;
+import eu.voho.jhttpmock.base.AbstractCloseableMockHttpServer;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class JettyMockHttpServer extends AbstractMockHttpServer {
+public class JettyMockHttpServer extends AbstractCloseableMockHttpServer {
     private final int port;
     private final Server server;
 

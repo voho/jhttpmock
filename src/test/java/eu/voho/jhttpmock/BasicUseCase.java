@@ -2,9 +2,9 @@ package eu.voho.jhttpmock;
 
 import eu.voho.jhttpmock.jetty.JettyMockHttpServer;
 import eu.voho.jhttpmock.junit.MockHttpServerRule;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,21 +21,22 @@ public class BasicUseCase {
     public void test() throws IOException {
         mockHttpServerRule
                 .onRequest()
-                .withUrl("/ping")
+                .withUrlEqualTo("/ping")
                 .thenRespond()
                 .withCode(201)
                 .withBody("Hello!");
 
-        // TODO fire
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpGet get = new HttpGet("http://localhost:8081/ping");
 
-        HttpGet get = new HttpGet("http://localhost:8081/ping");
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse response = client.execute(get);
-        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(201);
+            try (CloseableHttpResponse response = client.execute(get)) {
+                assertThat(response.getStatusLine().getStatusCode()).isEqualTo(201);
+            }
+        }
 
         mockHttpServerRule
                 .verifyThatRequest()
-                .withUrl("/ping")
-                .receivedTimes(1);
+                .withUrlEqualTo("/ping")
+                .wasReceivedOnce();
     }
 }
