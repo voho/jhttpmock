@@ -1,4 +1,4 @@
-package eu.voho.jhttpmock.base.stub;
+package eu.voho.jhttpmock;
 
 /**
  * Created by vojta on 14/04/2017.

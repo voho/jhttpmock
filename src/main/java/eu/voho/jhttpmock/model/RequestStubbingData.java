@@ -1,4 +1,4 @@
-package eu.voho.jhttpmock.base.data;
+package eu.voho.jhttpmock.model;
 
 import java.util.function.Predicate;
 

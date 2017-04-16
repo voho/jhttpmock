@@ -1,8 +1,8 @@
 package eu.voho.jhttpmock.junit;
 
 import eu.voho.jhttpmock.MockHttpServer;
-import eu.voho.jhttpmock.base.stub.RequestStubbing;
-import eu.voho.jhttpmock.base.stub.VerifyStubbing;
+import eu.voho.jhttpmock.RequestStubbing;
+import eu.voho.jhttpmock.VerifyStubbing;
 import org.junit.rules.ExternalResource;
 
 public class MockHttpServerRule extends ExternalResource implements MockHttpServer {

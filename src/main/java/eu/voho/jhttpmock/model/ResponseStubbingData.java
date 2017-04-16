@@ -1,4 +1,4 @@
-package eu.voho.jhttpmock.base.data;
+package eu.voho.jhttpmock.model;
 
 import java.io.IOException;
 import java.util.function.Consumer;

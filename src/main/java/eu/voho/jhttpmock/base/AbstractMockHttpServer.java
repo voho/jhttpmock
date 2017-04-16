@@ -1,17 +1,17 @@
 package eu.voho.jhttpmock.base;
 
 import eu.voho.jhttpmock.MockHttpServer;
-import eu.voho.jhttpmock.base.data.MockState;
-import eu.voho.jhttpmock.base.data.RequestStubbingData;
-import eu.voho.jhttpmock.base.data.RequestWrapper;
-import eu.voho.jhttpmock.base.data.ResponseStubbingData;
-import eu.voho.jhttpmock.base.data.ResponseWrapper;
-import eu.voho.jhttpmock.base.rule.MockBehaviour;
-import eu.voho.jhttpmock.base.rule.MockBehaviourRule;
-import eu.voho.jhttpmock.base.rule.MockInteractions;
-import eu.voho.jhttpmock.base.stub.RequestStubbing;
-import eu.voho.jhttpmock.base.stub.ResponseStubbing;
-import eu.voho.jhttpmock.base.stub.VerifyStubbing;
+import eu.voho.jhttpmock.RequestStubbing;
+import eu.voho.jhttpmock.ResponseStubbing;
+import eu.voho.jhttpmock.VerifyStubbing;
+import eu.voho.jhttpmock.model.MockBehaviour;
+import eu.voho.jhttpmock.model.MockBehaviourRule;
+import eu.voho.jhttpmock.model.MockInteractions;
+import eu.voho.jhttpmock.model.MockState;
+import eu.voho.jhttpmock.model.RequestStubbingData;
+import eu.voho.jhttpmock.model.RequestWrapper;
+import eu.voho.jhttpmock.model.ResponseStubbingData;
+import eu.voho.jhttpmock.model.ResponseWrapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

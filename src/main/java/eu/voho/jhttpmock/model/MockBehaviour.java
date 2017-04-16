@@ -1,7 +1,4 @@
-package eu.voho.jhttpmock.base.rule;
-
-import eu.voho.jhttpmock.base.data.RequestWrapper;
-import eu.voho.jhttpmock.base.data.ResponseWrapper;
+package eu.voho.jhttpmock.model;
 
 import java.util.LinkedList;
 import java.util.List;

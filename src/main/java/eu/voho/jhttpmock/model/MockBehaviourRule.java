@@ -1,9 +1,4 @@
-package eu.voho.jhttpmock.base.rule;
-
-import eu.voho.jhttpmock.base.data.RequestStubbingData;
-import eu.voho.jhttpmock.base.data.RequestWrapper;
-import eu.voho.jhttpmock.base.data.ResponseStubbingData;
-import eu.voho.jhttpmock.base.data.ResponseWrapper;
+package eu.voho.jhttpmock.model;
 
 /**
  * Created by vojta on 16/04/2017.

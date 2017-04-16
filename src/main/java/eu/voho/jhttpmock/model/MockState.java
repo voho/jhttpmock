@@ -1,7 +1,4 @@
-package eu.voho.jhttpmock.base.data;
-
-import eu.voho.jhttpmock.base.rule.MockBehaviour;
-import eu.voho.jhttpmock.base.rule.MockInteractions;
+package eu.voho.jhttpmock.model;
 
 /**
  * Created by vojta on 15/04/2017.
