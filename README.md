@@ -18,6 +18,8 @@ public class BasicUseCase {
     
     @Test
     public void test() {
+        // mock behaviour
+        
         mockHttpServerRule
             .onRequest()
             .withUrlEqualTo("/ping")
@@ -26,7 +28,9 @@ public class BasicUseCase {
             .withGaussianRandomDelay(Duration.ofMillis(50), Duration.ofMillis(30))
             .withBody("Hello!"); 
                    
-        // send GET request
+        // ...send HTTP GET request...
+        
+        // verification
         
         mockHttpServerRule
             .verifyThatRequest()
