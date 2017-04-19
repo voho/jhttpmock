@@ -55,7 +55,7 @@ public class VerificationRequestStubbing implements RequestStubbing {
 
     @Override
     public void wasReceivedTimes(final Matcher<Integer> timesMatcher) {
-        final List<RequestWrapper> requests = mockInteractions.findByRule(requestStubbingData);
+        final List<RequestWrapper> requests = mockInteractions.findInteraction(requestStubbingData);
         assertThat(requests.size(), timesMatcher);
     }
 }

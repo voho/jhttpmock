@@ -44,7 +44,7 @@ public abstract class AbstractCloseableMockHttpServer implements CloseableMockHt
     protected boolean handleByMock(final HttpServletRequest request, final HttpServletResponse response) {
         final RequestWrapper requestWrapper = wrapHttpRequest(request);
         final ResponseWrapper responseWrapper = wrapHttpResponse(response);
-        interactions.addRequest(requestWrapper);
+        interactions.addInteraction(requestWrapper);
         return behaviour.applyBestMatchingRule(requestWrapper, responseWrapper);
     }
 
