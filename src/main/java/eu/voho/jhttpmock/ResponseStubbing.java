@@ -4,14 +4,6 @@ import java.time.Duration;
 import java.util.Arrays;
 
 public interface ResponseStubbing {
-    ResponseStubbing withRandomDelay(Duration minDelay, Duration maxDelay);
-
-    ResponseStubbing withGaussianRandomDelay(Duration mean, Duration deviation);
-
-    default ResponseStubbing withDelay(Duration delay) {
-        return withRandomDelay(delay, delay);
-    }
-
     default ResponseStubbing withHeader(String name, String... values) {
         return withHeader(name, Arrays.asList(values));
     }
@@ -21,4 +13,12 @@ public interface ResponseStubbing {
     ResponseStubbing withCode(int code);
 
     ResponseStubbing withBody(String body);
+
+    ResponseStubbing withRandomDelay(Duration minDelay, Duration maxDelay);
+
+    ResponseStubbing withGaussianRandomDelay(Duration mean, Duration deviation);
+
+    default ResponseStubbing withDelay(Duration delay) {
+        return withRandomDelay(delay, delay);
+    }
 }

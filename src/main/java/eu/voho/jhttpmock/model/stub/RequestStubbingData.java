@@ -10,29 +10,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-/**
- * Created by vojta on 14/04/2017.
- */
 public class RequestStubbingData {
     private Matcher<String> urlMatcher = CoreMatchers.any(String.class);
     private Matcher<String> methodMatcher = CoreMatchers.any(String.class);
-    private Matcher<String> bodyMatcher = CoreMatchers.any(String.class);
-    private List<KeyValueMatchers> headerMatchers = new LinkedList<>();
-    private List<KeyValueMatchers> queryParameterMatchers = new LinkedList<>();
+    private Matcher<char[]> bodyMatcher = CoreMatchers.any(char[].class);
+    private final List<KeyValueMatchers> headerMatchers = new LinkedList<>();
+    private final List<KeyValueMatchers> queryParameterMatchers = new LinkedList<>();
 
     public Predicate<RequestWrapper> asPredicate() {
         return (request -> urlMatcher.matches(request.getUrl())
                 && methodMatcher.matches(request.getMethod())
-//                && bodyMatcher.matches(request.getBody()) // TODO type
+                && bodyMatcher.matches(request.getBody())
                 && allMatch(headerMatchers, request.getHeaders())
                 && allMatch(queryParameterMatchers, request.getQueryParameters()));
     }
 
-    private boolean allMatch(List<KeyValueMatchers> matchers, Map<String, String[]> values) {
-        for (KeyValueMatchers matcher : matchers) {
-            for (Map.Entry<String, String[]> entry : values.entrySet()) {
-                boolean matchesKey = matcher.keyMatcher.matches(entry.getKey());
-                boolean matchesValue = matcher.valueMatcher.matches(Arrays.asList(entry.getValue()));
+    private boolean allMatch(final List<KeyValueMatchers> matchers, final Map<String, String[]> values) {
+        for (final KeyValueMatchers matcher : matchers) {
+            for (final Map.Entry<String, String[]> entry : values.entrySet()) {
+                final boolean matchesKey = matcher.keyMatcher.matches(entry.getKey());
+                final boolean matchesValue = matcher.valueMatcher.matches(Arrays.asList(entry.getValue()));
 
                 if (!matchesKey || !matchesValue) {
                     return false;
@@ -43,23 +40,23 @@ public class RequestStubbingData {
         return true;
     }
 
-    public void setUrlMatcher(Matcher<String> urlMatcher) {
+    public void setUrlMatcher(final Matcher<String> urlMatcher) {
         this.urlMatcher = urlMatcher;
     }
 
-    public void setMethodMatcher(Matcher<String> methodMatcher) {
+    public void setMethodMatcher(final Matcher<String> methodMatcher) {
         this.methodMatcher = methodMatcher;
     }
 
-    public void addHeaderMatcher(Matcher<String> nameMatcher, Matcher<Iterable<String>> valueMatcher) {
+    public void addHeaderMatcher(final Matcher<String> nameMatcher, final Matcher<Iterable<String>> valueMatcher) {
         this.headerMatchers.add(new KeyValueMatchers(nameMatcher, valueMatcher));
     }
 
-    public void addQueryParameterMatcher(Matcher<String> nameMatcher, Matcher<Iterable<String>> valueMatcher) {
+    public void addQueryParameterMatcher(final Matcher<String> nameMatcher, final Matcher<Iterable<String>> valueMatcher) {
         this.queryParameterMatchers.add(new KeyValueMatchers(nameMatcher, valueMatcher));
     }
 
-    public void setBodyMatcher(Matcher<String> bodyMatcher) {
+    public void setBodyMatcher(final Matcher<char[]> bodyMatcher) {
         this.bodyMatcher = bodyMatcher;
     }
 
@@ -67,7 +64,7 @@ public class RequestStubbingData {
         Matcher<String> keyMatcher;
         Matcher<Iterable<String>> valueMatcher;
 
-        KeyValueMatchers(Matcher<String> keyMatcher, Matcher<Iterable<String>> valueMatcher) {
+        KeyValueMatchers(final Matcher<String> keyMatcher, final Matcher<Iterable<String>> valueMatcher) {
             this.keyMatcher = keyMatcher;
             this.valueMatcher = valueMatcher;
         }

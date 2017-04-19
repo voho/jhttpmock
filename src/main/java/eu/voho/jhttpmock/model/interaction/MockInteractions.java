@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-/**
- * Created by vojta on 14/04/2017.
- */
 public class MockInteractions {
     private final List<RequestWrapper> history;
 
@@ -20,7 +17,7 @@ public class MockInteractions {
     }
 
     public void recordRequest(RequestWrapper request) {
-        this.history.add(request);
+        history.add(request);
     }
 
     public void reset() {

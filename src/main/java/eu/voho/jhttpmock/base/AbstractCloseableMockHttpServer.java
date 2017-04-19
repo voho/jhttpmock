@@ -27,8 +27,8 @@ public abstract class AbstractCloseableMockHttpServer implements CloseableMockHt
 
     @Override
     public void reset() {
-        this.behaviour.reset();
-        this.interactions.reset();
+        behaviour.reset();
+        interactions.reset();
     }
 
     @Override
@@ -45,14 +45,14 @@ public abstract class AbstractCloseableMockHttpServer implements CloseableMockHt
         final RequestWrapper requestWrapper = wrapHttpRequest(request);
         final ResponseWrapper responseWrapper = wrapHttpResponse(response);
         interactions.recordRequest(requestWrapper);
-        return behaviour.apply(requestWrapper, responseWrapper);
+        return behaviour.applyTo(requestWrapper, responseWrapper);
     }
 
-    private ResponseWrapper wrapHttpResponse(HttpServletResponse response) {
-        return new ResponseWrapper(response);
-    }
-
-    private RequestWrapper wrapHttpRequest(HttpServletRequest request) {
+    private RequestWrapper wrapHttpRequest(final HttpServletRequest request) {
         return new RequestWrapper(request);
+    }
+
+    private ResponseWrapper wrapHttpResponse(final HttpServletResponse response) {
+        return new ResponseWrapper(response);
     }
 }

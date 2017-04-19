@@ -17,7 +17,7 @@ public class JettyMockHttpServer extends AbstractCloseableMockHttpServer {
     private final int port;
     private final Server server;
 
-    public JettyMockHttpServer(int port) {
+    public JettyMockHttpServer(final int port) {
         this.port = port;
         this.server = new Server(port);
 

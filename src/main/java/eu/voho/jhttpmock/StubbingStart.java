@@ -1,10 +1,18 @@
 package eu.voho.jhttpmock;
 
 /**
- * Created by vojta on 16/04/2017.
+ * Stubbing start point.
  */
 public interface StubbingStart {
+    /**
+     * Starts a stub for behaviour definition.
+     * @return request stubbing (builder)
+     */
     RequestStubbing onRequest();
 
+    /**
+     * Starts a stub for behaviour verification.
+     * @return request stubbing (builder)
+     */
     RequestStubbing verifyThatRequest();
 }

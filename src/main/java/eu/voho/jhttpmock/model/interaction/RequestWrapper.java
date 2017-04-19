@@ -8,9 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * Created by vojta on 16/04/2017.
- */
 public class RequestWrapper {
     private final String method;
     private final String url;
@@ -18,7 +15,7 @@ public class RequestWrapper {
     private final Map<String, String[]> queryParameters;
     private final ByteArrayOutputStream body;
 
-    public RequestWrapper(HttpServletRequest request) {
+    public RequestWrapper(final HttpServletRequest request) {
         this.method = request.getMethod();
         this.url = request.getRequestURI();
         this.headers = new LinkedHashMap<>();
@@ -27,7 +24,7 @@ public class RequestWrapper {
         });
         this.queryParameters = new TreeMap<>(request.getParameterMap());
         this.body = new ByteArrayOutputStream();
-        byte[] buf = new byte[1024];
+        final byte[] buf = new byte[1024];
         int n;
         try {
             while ((n = request.getInputStream().read(buf)) > 0) {

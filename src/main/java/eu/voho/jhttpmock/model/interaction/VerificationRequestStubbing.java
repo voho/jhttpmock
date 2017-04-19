@@ -10,33 +10,34 @@ import java.util.List;
 import static org.junit.Assert.assertThat;
 
 public class VerificationRequestStubbing implements RequestStubbing {
-    private MockInteractions mockInteractions;
-    private RequestStubbingData requestStubbingData = new RequestStubbingData();
+    private final MockInteractions mockInteractions;
+    private final RequestStubbingData requestStubbingData;
 
-    public VerificationRequestStubbing(MockInteractions mockInteractions) {
+    public VerificationRequestStubbing(final MockInteractions mockInteractions) {
         this.mockInteractions = mockInteractions;
+        this.requestStubbingData = new RequestStubbingData();
     }
 
     @Override
-    public RequestStubbing withMethod(Matcher<String> methodMatcher) {
+    public RequestStubbing withMethod(final Matcher<String> methodMatcher) {
         requestStubbingData.setMethodMatcher(methodMatcher);
         return this;
     }
 
     @Override
-    public RequestStubbing withHeader(Matcher<String> nameMatcher, Matcher<Iterable<String>> valueMatcher) {
+    public RequestStubbing withHeader(final Matcher<String> nameMatcher, final Matcher<Iterable<String>> valueMatcher) {
         requestStubbingData.addHeaderMatcher(nameMatcher, valueMatcher);
         return this;
     }
 
     @Override
-    public RequestStubbing withQueryParameter(Matcher<String> nameMatcher, Matcher<Iterable<String>> valueMatcher) {
+    public RequestStubbing withQueryParameter(final Matcher<String> nameMatcher, final Matcher<Iterable<String>> valueMatcher) {
         requestStubbingData.addQueryParameterMatcher(nameMatcher, valueMatcher);
         return this;
     }
 
     @Override
-    public RequestStubbing withBody(Matcher<String> bodyMatcher) {
+    public RequestStubbing withBody(final Matcher<char[]> bodyMatcher) {
         requestStubbingData.setBodyMatcher(bodyMatcher);
         return this;
     }
@@ -49,7 +50,7 @@ public class VerificationRequestStubbing implements RequestStubbing {
 
     @Override
     public ResponseStubbing thenRespond() {
-        throw new UnsupportedOperationException("Cannot respond while in verification mode.");
+        throw new UnsupportedOperationException("Cannot define a response in the verification mode.");
     }
 
     @Override

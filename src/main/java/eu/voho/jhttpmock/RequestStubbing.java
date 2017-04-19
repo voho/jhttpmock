@@ -50,9 +50,13 @@ public interface RequestStubbing {
         return withQueryParameter(CoreMatchers.equalTo(name), valueMatcher);
     }
 
-    RequestStubbing withBody(Matcher<String> bodyMatcher);
+    RequestStubbing withBody(Matcher<char[]> bodyMatcher);
 
     default RequestStubbing withBodyEqualTo(String body) {
+        return withBody(CoreMatchers.equalTo(body.toCharArray()));
+    }
+
+    default RequestStubbing withBodyEqualTo(char[] body) {
         return withBody(CoreMatchers.equalTo(body));
     }
 
