@@ -1,57 +1,56 @@
 package eu.voho.jhttpmock.model.interaction;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
+/**
+ * This class encapsulates all operations that we need to do with a request.
+ */
 public class RequestWrapper {
-    private final String method;
-    private final String url;
-    private final Map<String, String[]> headers;
-    private final Map<String, String[]> queryParameters;
-    private final ByteArrayOutputStream body;
+    private final HttpServletRequest request;
 
     public RequestWrapper(final HttpServletRequest request) {
-        this.method = request.getMethod();
-        this.url = request.getRequestURI();
-        this.headers = new LinkedHashMap<>();
-        Collections.list(request.getHeaderNames()).forEach(hn -> {
-            headers.put(hn, Collections.list(request.getHeaders(hn)).stream().toArray(String[]::new));
-        });
-        this.queryParameters = new TreeMap<>(request.getParameterMap());
-        this.body = new ByteArrayOutputStream();
-        final byte[] buf = new byte[1024];
-        int n;
-        try {
-            while ((n = request.getInputStream().read(buf)) > 0) {
-                body.write(buf, 0, n);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot read request input stream.", e);
-        }
+        this.request = request;
     }
 
     public String getMethod() {
-        return method;
+        return request.getMethod();
     }
 
     public String getUrl() {
-        return url;
+        return request.getRequestURI();
     }
 
     public Map<String, String[]> getHeaders() {
+        Map<String, String[]> headers = new LinkedHashMap<>();
+        if (request.getHeaderNames() != null) {
+            Collections.list(request.getHeaderNames()).forEach(hn -> {
+                headers.put(hn, Collections.list(request.getHeaders(hn)).stream().toArray(String[]::new));
+            });
+        }
         return headers;
     }
 
     public Map<String, String[]> getQueryParameters() {
-        return queryParameters;
+        return request.getParameterMap();
     }
 
-    public byte[] getBody() {
-        return body.toByteArray();
+    public char[] getBody() {
+        try {
+            StringBuilder buf = new StringBuilder(512);
+            try (BufferedReader br = request.getReader()) {
+                int b;
+                while ((b = br.read()) != -1) {
+                    buf.append((char) b);
+                }
+            }
+            return buf.toString().toCharArray();
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot read request body.", e);
+        }
     }
 }

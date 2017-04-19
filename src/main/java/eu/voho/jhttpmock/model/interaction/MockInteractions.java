@@ -16,7 +16,7 @@ public class MockInteractions {
         return history.stream().filter(rule).collect(Collectors.toList());
     }
 
-    public void recordRequest(final RequestWrapper request) {
+    public void addRequest(final RequestWrapper request) {
         history.add(request);
     }
 

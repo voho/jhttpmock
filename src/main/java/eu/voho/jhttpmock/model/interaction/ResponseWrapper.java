@@ -4,6 +4,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * This class encapsulates all operations that we need to do with a response.
+ */
 public class ResponseWrapper {
     private final HttpServletResponse response;
 
