@@ -7,6 +7,8 @@
 
 Mock HTTP Server for Java built with Jetty and JUnit.
 
+> TODO: cleanup, unit tests
+
 ## Quick Example
 
 The example is using JHttpMock as a JUnit rule.
@@ -14,13 +16,13 @@ The example is using JHttpMock as a JUnit rule.
 ```java
 public class BasicUseCase {
     @Rule
-    public MockHttpServerRule mockHttpServerRule = new MockHttpServerRule(new JettyMockHttpServer(8081));
+    public MockHttpServerRule mock = new MockHttpServerRule(new JettyMockHttpServer(8081));
     
     @Test
     public void test() {
-        // mock behaviour
+        // define behaviour
         
-        mockHttpServerRule
+        mock
             .onRequest()
             .withUrlEqualTo("/ping")
             .thenRespond()
@@ -30,9 +32,9 @@ public class BasicUseCase {
                    
         // ...send HTTP GET request...
         
-        // verification
+        // verify
         
-        mockHttpServerRule
+        mock
             .verifyThatRequest()
             .withUrlEqualTo("/ping")
             .wasReceivedOnce();
