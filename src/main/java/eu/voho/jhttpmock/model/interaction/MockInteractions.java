@@ -12,11 +12,11 @@ public class MockInteractions {
         this.history = new LinkedList<>();
     }
 
-    public List<RequestWrapper> findByRule(Predicate<RequestWrapper> rule) {
+    public List<RequestWrapper> findByRule(final Predicate<RequestWrapper> rule) {
         return history.stream().filter(rule).collect(Collectors.toList());
     }
 
-    public void recordRequest(RequestWrapper request) {
+    public void recordRequest(final RequestWrapper request) {
         history.add(request);
     }
 

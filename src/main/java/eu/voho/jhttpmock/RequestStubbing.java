@@ -35,7 +35,7 @@ public interface RequestStubbing {
     }
 
     default RequestStubbing withSingleHeaderEqualTo(String name, String value) {
-        Matcher<Iterable<String>> valueMatcher = Matchers.<Iterable<String>>allOf(Matchers.iterableWithSize(1), Matchers.contains(value));
+        final Matcher<Iterable<String>> valueMatcher = Matchers.<Iterable<String>>allOf(Matchers.iterableWithSize(1), Matchers.contains(value));
         return withHeader(CoreMatchers.equalTo(name), valueMatcher);
     }
 
@@ -46,7 +46,7 @@ public interface RequestStubbing {
     }
 
     default RequestStubbing withSingleQueryParameterEqualTo(String name, String value) {
-        Matcher<Iterable<String>> valueMatcher = Matchers.<Iterable<String>>allOf(Matchers.iterableWithSize(1), Matchers.contains(value));
+        final Matcher<Iterable<String>> valueMatcher = Matchers.<Iterable<String>>allOf(Matchers.iterableWithSize(1), Matchers.contains(value));
         return withQueryParameter(CoreMatchers.equalTo(name), valueMatcher);
     }
 

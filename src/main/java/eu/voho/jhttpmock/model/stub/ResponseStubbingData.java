@@ -13,8 +13,15 @@ import java.util.function.Supplier;
 public class ResponseStubbingData {
     private int code;
     private char[] body;
-    private final Map<String, Iterable<String>> headers = new LinkedHashMap<>();
-    private Optional<Supplier<Duration>> delayGenerator = Optional.empty();
+    private final Map<String, Iterable<String>> headers;
+    private Optional<Supplier<Duration>> delayGenerator;
+
+    public ResponseStubbingData() {
+        this.code = 200;
+        this.body = new char[0];
+        this.headers = new LinkedHashMap<>();
+        this.delayGenerator = Optional.empty();
+    }
 
     public void setCode(final int code) {
         this.code = code;

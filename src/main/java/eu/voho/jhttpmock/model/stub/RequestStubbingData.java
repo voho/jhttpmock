@@ -11,18 +11,28 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public class RequestStubbingData {
-    private Matcher<String> urlMatcher = CoreMatchers.any(String.class);
-    private Matcher<String> methodMatcher = CoreMatchers.any(String.class);
-    private Matcher<char[]> bodyMatcher = CoreMatchers.any(char[].class);
-    private final List<KeyValueMatchers> headerMatchers = new LinkedList<>();
-    private final List<KeyValueMatchers> queryParameterMatchers = new LinkedList<>();
+    private Matcher<String> urlMatcher;
+    private Matcher<String> methodMatcher;
+    private Matcher<char[]> bodyMatcher;
+    private final List<KeyValueMatchers> headerMatchers;
+    private final List<KeyValueMatchers> queryParameterMatchers;
+
+    public RequestStubbingData() {
+        urlMatcher = CoreMatchers.any(String.class);
+        methodMatcher = CoreMatchers.any(String.class);
+        bodyMatcher = CoreMatchers.any(char[].class);
+        headerMatchers = new LinkedList<>();
+        queryParameterMatchers = new LinkedList<>();
+    }
 
     public Predicate<RequestWrapper> asPredicate() {
-        return (request -> urlMatcher.matches(request.getUrl())
-                && methodMatcher.matches(request.getMethod())
-                && bodyMatcher.matches(request.getBody())
-                && allMatch(headerMatchers, request.getHeaders())
-                && allMatch(queryParameterMatchers, request.getQueryParameters()));
+        return (
+                request -> urlMatcher.matches(request.getUrl())
+                        && methodMatcher.matches(request.getMethod())
+                        && bodyMatcher.matches(request.getBody())
+                        && allMatch(headerMatchers, request.getHeaders())
+                        && allMatch(queryParameterMatchers, request.getQueryParameters())
+        );
     }
 
     private boolean allMatch(final List<KeyValueMatchers> matchers, final Map<String, String[]> values) {
