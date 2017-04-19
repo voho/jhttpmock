@@ -17,12 +17,12 @@ import javax.servlet.http.HttpServletResponse;
  * Stores mock behaviour and interactions.
  */
 public abstract class AbstractCloseableMockHttpServer implements CloseableMockHttpServer {
-    private final MockBehaviour behaviour;
-    private final MockInteractions interactions;
+    private final MockBehaviour<RequestWrapper, ResponseWrapper> behaviour;
+    private final MockInteractions<RequestWrapper> interactions;
 
     protected AbstractCloseableMockHttpServer() {
-        this.behaviour = new MockBehaviour();
-        this.interactions = new MockInteractions();
+        this.behaviour = new MockBehaviour<>();
+        this.interactions = new MockInteractions<>();
     }
 
     @Override
@@ -45,7 +45,7 @@ public abstract class AbstractCloseableMockHttpServer implements CloseableMockHt
         final RequestWrapper requestWrapper = wrapHttpRequest(request);
         final ResponseWrapper responseWrapper = wrapHttpResponse(response);
         interactions.addRequest(requestWrapper);
-        return behaviour.applyTo(requestWrapper, responseWrapper);
+        return behaviour.applyBestMatchingRule(requestWrapper, responseWrapper);
     }
 
     private RequestWrapper wrapHttpRequest(final HttpServletRequest request) {

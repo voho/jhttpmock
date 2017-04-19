@@ -10,10 +10,10 @@ import java.util.List;
 import static org.junit.Assert.assertThat;
 
 public class VerificationRequestStubbing implements RequestStubbing {
-    private final MockInteractions mockInteractions;
+    private final MockInteractions<RequestWrapper> mockInteractions;
     private final RequestStubbingData requestStubbingData;
 
-    public VerificationRequestStubbing(final MockInteractions mockInteractions) {
+    public VerificationRequestStubbing(final MockInteractions<RequestWrapper> mockInteractions) {
         this.mockInteractions = mockInteractions;
         this.requestStubbingData = new RequestStubbingData();
     }
@@ -55,7 +55,7 @@ public class VerificationRequestStubbing implements RequestStubbing {
 
     @Override
     public void wasReceivedTimes(final Matcher<Integer> timesMatcher) {
-        final List<RequestWrapper> requests = mockInteractions.findByRule(requestStubbingData.asPredicate());
+        final List<RequestWrapper> requests = mockInteractions.findByRule(requestStubbingData);
         assertThat(requests.size(), timesMatcher);
     }
 }

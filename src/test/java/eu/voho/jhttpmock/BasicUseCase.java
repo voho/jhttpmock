@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class BasicUseCase {
     @Rule
-    public MockHttpServerRule mockHttpServerRule = new MockHttpServerRule(new JettyMockHttpServer(8081));
+    public MockHttpServerRule mockHttpServerRule = new MockHttpServerRule(new JettyMockHttpServer(8080));
 
     @Test
     public void test() throws IOException {
@@ -32,7 +32,7 @@ public class BasicUseCase {
                     .withBody("Hello!");
 
             try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-                HttpGet get = new HttpGet("http://localhost:8081/ping");
+                final HttpGet get = new HttpGet("http://localhost:8080/ping");
 
                 try (CloseableHttpResponse response = client.execute(get)) {
                     assertThat(response.getStatusLine().getStatusCode()).isEqualTo(201);

@@ -5,18 +5,18 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class MockInteractions {
-    private final List<RequestWrapper> history;
+public class MockInteractions<T> {
+    private final List<T> history;
 
     public MockInteractions() {
         this.history = new LinkedList<>();
     }
 
-    public List<RequestWrapper> findByRule(final Predicate<RequestWrapper> rule) {
+    public List<T> findByRule(final Predicate<T> rule) {
         return history.stream().filter(rule).collect(Collectors.toList());
     }
 
-    public void addRequest(final RequestWrapper request) {
+    public void addRequest(final T request) {
         history.add(request);
     }
 

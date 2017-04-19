@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class ResponseStubbingData {
+public class ResponseStubbingData implements Consumer<ResponseWrapper> {
     private int code;
     private char[] body;
     private final Map<String, Iterable<String>> headers;
@@ -39,24 +39,23 @@ public class ResponseStubbingData {
         this.delayGenerator = Optional.of(delayGenerator);
     }
 
-    public Consumer<ResponseWrapper> asConsumer() {
-        return (response -> {
-            delayGenerator.ifPresent(delaySupplier -> {
-                try {
-                    Thread.sleep(delaySupplier.get().toMillis());
-                } catch (InterruptedException e) {
-                    throw new RuntimeException("Cannot sleep.", e);
-                }
-            });
-
-            response.setStatus(code);
-            response.addHeader(headers);
-
+    @Override
+    public void accept(ResponseWrapper response) {
+        delayGenerator.ifPresent(delaySupplier -> {
             try {
-                response.write(body);
-            } catch (IOException e) {
-                // TODO
+                Thread.sleep(delaySupplier.get().toMillis());
+            } catch (InterruptedException e) {
+                throw new RuntimeException("Cannot sleep.", e);
             }
         });
+
+        response.setStatus(code);
+        response.addHeader(headers);
+
+        try {
+            response.write(body);
+        } catch (IOException e) {
+            // TODO
+        }
     }
 }

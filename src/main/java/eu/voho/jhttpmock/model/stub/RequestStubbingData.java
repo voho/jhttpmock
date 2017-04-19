@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class RequestStubbingData {
+public class RequestStubbingData implements Predicate<RequestWrapper> {
     private Matcher<String> urlMatcher;
     private Matcher<String> methodMatcher;
     private Matcher<char[]> bodyMatcher;
@@ -25,14 +25,13 @@ public class RequestStubbingData {
         queryParameterMatchers = new LinkedList<>();
     }
 
-    public Predicate<RequestWrapper> asPredicate() {
-        return (
-                request -> urlMatcher.matches(request.getUrl())
-                        && methodMatcher.matches(request.getMethod())
-                        && bodyMatcher.matches(request.getBody())
-                        && allMatch(headerMatchers, request.getHeaders())
-                        && allMatch(queryParameterMatchers, request.getQueryParameters())
-        );
+    @Override
+    public boolean test(RequestWrapper request) {
+        return urlMatcher.matches(request.getUrl())
+                && methodMatcher.matches(request.getMethod())
+                && bodyMatcher.matches(request.getBody())
+                && allMatch(headerMatchers, request.getHeaders())
+                && allMatch(queryParameterMatchers, request.getQueryParameters());
     }
 
     private boolean allMatch(final List<KeyValueMatchers> matchers, final Map<String, String[]> values) {
