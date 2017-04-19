@@ -7,9 +7,9 @@
 
 Mock HTTP Server for Java built with Jetty and JUnit.
 
-## Example
+## Quick Example
 
-The example is using JHttpock as a JUnit rule.
+The example is using JHttpMock as a JUnit rule.
 
 ```java
 public class BasicUseCase {
@@ -40,3 +40,17 @@ public class BasicUseCase {
 }
 ```
 
+## Properties you can match the HTTP request on
+
+- method (GET, POST, etc.)
+- URL
+- header(s)
+- query parameter(s)
+- body 
+
+## Response properties you can set
+
+- status code
+- header(s)
+- body
+- delay (fixed, random, gaussian random)
