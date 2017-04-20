@@ -5,6 +5,7 @@ import eu.voho.jhttpmock.junit.MockHttpServerRule;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.net.URI;
 import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +25,7 @@ public class SingleServerTest {
                 .withBody("Hello!");
 
         PrimitiveHttpClient.executeGetAndVerify(
-                "http://localhost:8080/ping",
+                a -> a.setURI(URI.create("http://localhost:8080/ping")),
                 response -> assertThat(response.getStatusLine().getStatusCode()).isEqualTo(201)
         );
 

@@ -5,6 +5,8 @@ import eu.voho.jhttpmock.junit.MockHttpServerRule;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.net.URI;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MultipleServersTest {
@@ -27,11 +29,11 @@ public class MultipleServersTest {
                 .thenRespond()
                 .withBody("Hello, this is 2.");
 
-        PrimitiveHttpClient.executeGetAndVerify("http://localhost:8090/", r -> {
+        PrimitiveHttpClient.executeGetAndVerify(a -> a.setURI(URI.create("http://localhost:8090/")), r -> {
             assertThat(PrimitiveHttpClient.toString(r)).isEqualTo("Hello, this is 1.");
         });
 
-        PrimitiveHttpClient.executeGetAndVerify("http://localhost:8091/", r -> {
+        PrimitiveHttpClient.executeGetAndVerify(a -> a.setURI(URI.create("http://localhost:8091/")), r -> {
             assertThat(PrimitiveHttpClient.toString(r)).isEqualTo("Hello, this is 2.");
         });
 

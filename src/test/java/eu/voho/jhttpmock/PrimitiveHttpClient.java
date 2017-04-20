@@ -12,14 +12,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 public class PrimitiveHttpClient {
-    public static void executeGetAndVerify(final String url) throws IOException {
-        executeGetAndVerify(url, r -> {
+    public static void executeGetAndVerify(Consumer<HttpGet> getUpdater) throws IOException {
+        executeGetAndVerify(getUpdater, r -> {
         });
     }
 
-    public static void executeGetAndVerify(final String url, final Consumer<HttpResponse> responseValidator) throws IOException {
+    public static void executeGetAndVerify(final Consumer<HttpGet> getUpdater, final Consumer<HttpResponse> responseValidator) throws IOException {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            final HttpGet get = new HttpGet(url);
+            final HttpGet get = new HttpGet();
+            getUpdater.accept(get);
             try (CloseableHttpResponse response = client.execute(get)) {
                 responseValidator.accept(response);
             }

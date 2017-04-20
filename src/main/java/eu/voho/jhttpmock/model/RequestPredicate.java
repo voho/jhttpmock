@@ -42,18 +42,24 @@ class RequestPredicate implements Predicate<RequestWrapper> {
     }
 
     private boolean matchKeyAndAllValues(final List<KeyValueMatchers> matchers, final Map<String, String[]> values) {
-        for (final KeyValueMatchers matcher : matchers) {
-            for (final Map.Entry<String, String[]> entry : values.entrySet()) {
-                final boolean matchesKey = matcher.keyMatcher.test(entry.getKey());
-                final boolean matchesValue = matcher.valueMatcher.test(new HashSet<>(Arrays.asList(entry.getValue())));
+        if (matchers.isEmpty()) {
+            return true;
+        } else {
+            for (final KeyValueMatchers matcher : matchers) {
+                for (final Map.Entry<String, String[]> entry : values.entrySet()) {
+                    final boolean matchesKey = matcher.keyMatcher.test(entry.getKey());
 
-                if (!matchesKey || !matchesValue) {
-                    return false;
+                    if (matchesKey) {
+                        final boolean matchesValue = matcher.valueMatcher.test(new HashSet<>(Arrays.asList(entry.getValue())));
+
+                        if (!matchesValue) {
+                            return false;
+                        }
+                    }
                 }
             }
+            return true;
         }
-
-        return true;
     }
 
     void setUrlMatcher(final Predicate<String> urlMatcher) {

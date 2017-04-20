@@ -11,7 +11,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class RequestMatcherUsingQueryParameterTest {
+public class RequestMatcherUsingHeaderTest {
     @Rule
     public MockHttpServerRule mock = new MockHttpServerRule(new JettyMockHttpServer(8080));
 
@@ -19,27 +19,30 @@ public class RequestMatcherUsingQueryParameterTest {
     public void testQueryParameterMatching() throws IOException {
         mock
                 .onRequest()
-                .withQueryParameterEqualTo("p1", "v1")
+                .withHeaderEqualTo("h1", "v1")
                 .thenRespond()
                 .withCode(200);
 
         PrimitiveHttpClient.executeGetAndVerify(
-                a -> a.setURI(URI.create("http://localhost:8080/?p1=v1"))
+                a -> {
+                    a.setURI(URI.create("http://localhost:8080"));
+                    a.addHeader("h1", "v1");
+                }
         );
 
         mock
                 .verifyThatRequest()
-                .withQueryParameterEqualTo("p1", "v1")
+                .withHeaderEqualTo("h1", "v1")
                 .wasReceivedOnce();
 
         mock
                 .verifyThatRequest()
-                .withQueryParameterEqualTo("WRONG-NAME", "v1")
+                .withHeaderEqualTo("WRONG-NAME", "v1")
                 .wasNeverReceived();
 
         mock
                 .verifyThatRequest()
-                .withQueryParameterEqualTo("p1", "WRONG-VALUE")
+                .withHeaderEqualTo("h1", "WRONG-VALUE")
                 .wasNeverReceived();
     }
 
@@ -47,26 +50,30 @@ public class RequestMatcherUsingQueryParameterTest {
     public void testQueryParameterMatchingMultipleValues() throws IOException {
         mock
                 .onRequest()
-                .withQueryParameterEqualTo("p1", "v1")
+                .withHeaderEqualTo("h1", "v1")
                 .thenRespond()
                 .withCode(200);
 
         PrimitiveHttpClient.executeGetAndVerify(
-                a -> a.setURI(URI.create("http://localhost:8080/?p1=v1&p1=v2"))
+                a -> {
+                    a.setURI(URI.create("http://localhost:8080/?p1=v1&p1=v2"));
+                    a.addHeader("h1", "v1");
+                    a.addHeader("h1", "v2");
+                }
         );
 
         mock
                 .verifyThatRequest()
-                .withQueryParameterEqualTo("p1", new HashSet<>(Arrays.asList("v1", "v2")));
+                .withHeaderEqualTo("h1", new HashSet<>(Arrays.asList("v1", "v2")));
 
         mock
                 .verifyThatRequest()
-                .withQueryParameterEqualTo("p1", "v1")
+                .withHeaderEqualTo("h1", "v1")
                 .wasNeverReceived();
 
         mock
                 .verifyThatRequest()
-                .withQueryParameterEqualTo("p1", "v2")
+                .withHeaderEqualTo("h1", "v2")
                 .wasNeverReceived();
     }
 }
