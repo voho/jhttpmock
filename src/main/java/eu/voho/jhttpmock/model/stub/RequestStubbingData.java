@@ -30,11 +30,11 @@ public class RequestStubbingData implements Predicate<RequestWrapper> {
         return urlMatcher.matches(request.getUrl())
                 && methodMatcher.matches(request.getMethod())
                 && bodyMatcher.matches(request.getBody())
-                && allMatch(headerMatchers, request.getHeaders())
-                && allMatch(queryParameterMatchers, request.getQueryParameters());
+                && matchKeyAndAllValues(headerMatchers, request.getHeaders())
+                && matchKeyAndAllValues(queryParameterMatchers, request.getQueryParameters());
     }
 
-    private boolean allMatch(final List<KeyValueMatchers> matchers, final Map<String, String[]> values) {
+    private boolean matchKeyAndAllValues(final List<KeyValueMatchers> matchers, final Map<String, String[]> values) {
         for (final KeyValueMatchers matcher : matchers) {
             for (final Map.Entry<String, String[]> entry : values.entrySet()) {
                 final boolean matchesKey = matcher.keyMatcher.matches(entry.getKey());

@@ -41,7 +41,7 @@ public class JettyMockHttpServer extends AbstractCloseableMockHttpServer {
         return port;
     }
 
-    public void close() throws IOException {
+    public void close() {
         try {
             this.server.stop();
         } catch (Exception e) {
