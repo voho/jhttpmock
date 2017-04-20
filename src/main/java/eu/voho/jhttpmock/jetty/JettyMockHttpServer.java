@@ -20,6 +20,7 @@ public class JettyMockHttpServer extends AbstractCloseableMockHttpServer {
     public JettyMockHttpServer(final int port) {
         this.port = port;
         this.server = new Server(port);
+        this.server.setStopAtShutdown(true);
 
         this.server.setHandler(new AbstractHandler() {
             @Override

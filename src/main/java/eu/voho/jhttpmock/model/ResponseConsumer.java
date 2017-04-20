@@ -1,6 +1,6 @@
-package eu.voho.jhttpmock.model.stub;
+package eu.voho.jhttpmock.model;
 
-import eu.voho.jhttpmock.model.interaction.ResponseWrapper;
+import eu.voho.jhttpmock.model.http.ResponseWrapper;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -10,37 +10,31 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class ResponseStubbingData implements Consumer<ResponseWrapper> {
+/**
+ * HTTP response updater.
+ * By default, creates a response with the following properties:
+ * <ul>
+ * <li>status code: 200 OK</li>
+ * <li>empty body</li>
+ * <li>no headers</li>
+ * <li>no delay</li>
+ * </ul>
+ */
+public class ResponseConsumer implements Consumer<ResponseWrapper> {
     private int code;
     private char[] body;
     private final Map<String, Iterable<String>> headers;
     private Optional<Supplier<Duration>> delayGenerator;
 
-    public ResponseStubbingData() {
+    ResponseConsumer() {
         this.code = 200;
         this.body = new char[0];
         this.headers = new LinkedHashMap<>();
         this.delayGenerator = Optional.empty();
     }
 
-    public void setCode(final int code) {
-        this.code = code;
-    }
-
-    public void setBody(final char[] body) {
-        this.body = body;
-    }
-
-    public void addHeader(final String name, final Iterable<String> values) {
-        this.headers.put(name, values);
-    }
-
-    public void setDelayGenerator(final Supplier<Duration> delayGenerator) {
-        this.delayGenerator = Optional.of(delayGenerator);
-    }
-
     @Override
-    public void accept(ResponseWrapper response) {
+    public void accept(final ResponseWrapper response) {
         delayGenerator.ifPresent(delaySupplier -> {
             try {
                 Thread.sleep(delaySupplier.get().toMillis());
@@ -57,5 +51,21 @@ public class ResponseStubbingData implements Consumer<ResponseWrapper> {
         } catch (IOException e) {
             // TODO
         }
+    }
+
+    void setCode(final int code) {
+        this.code = code;
+    }
+
+    void setBody(final char[] body) {
+        this.body = body;
+    }
+
+    void addHeader(final String name, final Iterable<String> values) {
+        this.headers.put(name, values);
+    }
+
+    void setDelayGenerator(final Supplier<Duration> delayGenerator) {
+        this.delayGenerator = Optional.of(delayGenerator);
     }
 }

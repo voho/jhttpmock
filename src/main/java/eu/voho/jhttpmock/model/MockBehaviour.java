@@ -1,4 +1,4 @@
-package eu.voho.jhttpmock.model.behaviour;
+package eu.voho.jhttpmock.model;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -18,7 +18,7 @@ public class MockBehaviour<P, A> {
         this.rules = new LinkedList<>();
     }
 
-    public void addRule(final Predicate<P> requestStubbingData, final Consumer<A> responseStubbingData) {
+    void addRule(final Predicate<P> requestStubbingData, final Consumer<A> responseStubbingData) {
         this.rules.addFirst(new MockBehaviourRule(requestStubbingData, responseStubbingData));
     }
 

@@ -23,7 +23,7 @@ import org.junit.rules.ExternalResource;
 public class MockHttpServerRule extends ExternalResource implements MockHttpServer {
     private final CloseableMockHttpServer mockHttpServer;
 
-    public MockHttpServerRule(CloseableMockHttpServer mockHttpServer) {
+    public MockHttpServerRule(final CloseableMockHttpServer mockHttpServer) {
         this.mockHttpServer = mockHttpServer;
     }
 

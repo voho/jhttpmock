@@ -1,23 +1,28 @@
-package eu.voho.jhttpmock.model.stub;
+package eu.voho.jhttpmock.model;
 
-import eu.voho.jhttpmock.model.interaction.RequestWrapper;
+import eu.voho.jhttpmock.model.http.RequestWrapper;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class RequestStubbingData implements Predicate<RequestWrapper> {
+/**
+ * HTTP request matcher.
+ * By default, it matches all requests.
+ */
+public class RequestPredicate implements Predicate<RequestWrapper> {
     private Matcher<String> urlMatcher;
     private Matcher<String> methodMatcher;
     private Matcher<char[]> bodyMatcher;
     private final List<KeyValueMatchers> headerMatchers;
     private final List<KeyValueMatchers> queryParameterMatchers;
 
-    public RequestStubbingData() {
+    RequestPredicate() {
         urlMatcher = CoreMatchers.any(String.class);
         methodMatcher = CoreMatchers.any(String.class);
         bodyMatcher = CoreMatchers.any(char[].class);
@@ -26,7 +31,7 @@ public class RequestStubbingData implements Predicate<RequestWrapper> {
     }
 
     @Override
-    public boolean test(RequestWrapper request) {
+    public boolean test(final RequestWrapper request) {
         return urlMatcher.matches(request.getUrl())
                 && methodMatcher.matches(request.getMethod())
                 && bodyMatcher.matches(request.getBody())
@@ -49,31 +54,31 @@ public class RequestStubbingData implements Predicate<RequestWrapper> {
         return true;
     }
 
-    public void setUrlMatcher(final Matcher<String> urlMatcher) {
+    void setUrlMatcher(final Matcher<String> urlMatcher) {
         this.urlMatcher = urlMatcher;
     }
 
-    public void setMethodMatcher(final Matcher<String> methodMatcher) {
+    void setMethodMatcher(final Matcher<String> methodMatcher) {
         this.methodMatcher = methodMatcher;
     }
 
-    public void addHeaderMatcher(final Matcher<String> nameMatcher, final Matcher<Iterable<String>> valueMatcher) {
+    void addHeaderMatcher(final Matcher<String> nameMatcher, final Matcher<Collection<String>> valueMatcher) {
         this.headerMatchers.add(new KeyValueMatchers(nameMatcher, valueMatcher));
     }
 
-    public void addQueryParameterMatcher(final Matcher<String> nameMatcher, final Matcher<Iterable<String>> valueMatcher) {
+    void addQueryParameterMatcher(final Matcher<String> nameMatcher, final Matcher<Collection<String>> valueMatcher) {
         this.queryParameterMatchers.add(new KeyValueMatchers(nameMatcher, valueMatcher));
     }
 
-    public void setBodyMatcher(final Matcher<char[]> bodyMatcher) {
+    void setBodyMatcher(final Matcher<char[]> bodyMatcher) {
         this.bodyMatcher = bodyMatcher;
     }
 
     private static class KeyValueMatchers {
         Matcher<String> keyMatcher;
-        Matcher<Iterable<String>> valueMatcher;
+        Matcher<Collection<String>> valueMatcher;
 
-        KeyValueMatchers(final Matcher<String> keyMatcher, final Matcher<Iterable<String>> valueMatcher) {
+        KeyValueMatchers(final Matcher<String> keyMatcher, final Matcher<Collection<String>> valueMatcher) {
             this.keyMatcher = keyMatcher;
             this.valueMatcher = valueMatcher;
         }

@@ -2,12 +2,12 @@ package eu.voho.jhttpmock.base;
 
 import eu.voho.jhttpmock.CloseableMockHttpServer;
 import eu.voho.jhttpmock.RequestStubbing;
-import eu.voho.jhttpmock.model.behaviour.BehaviourDefiningRequestStubbing;
-import eu.voho.jhttpmock.model.behaviour.MockBehaviour;
-import eu.voho.jhttpmock.model.interaction.MockInteractions;
-import eu.voho.jhttpmock.model.interaction.RequestWrapper;
-import eu.voho.jhttpmock.model.interaction.ResponseWrapper;
-import eu.voho.jhttpmock.model.interaction.VerificationRequestStubbing;
+import eu.voho.jhttpmock.model.BehaviourDefiningRequestStubbing;
+import eu.voho.jhttpmock.model.MockBehaviour;
+import eu.voho.jhttpmock.model.MockInteractions;
+import eu.voho.jhttpmock.model.http.RequestWrapper;
+import eu.voho.jhttpmock.model.http.ResponseWrapper;
+import eu.voho.jhttpmock.model.VerificationRequestStubbing;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +28,7 @@ public abstract class AbstractCloseableMockHttpServer implements CloseableMockHt
     @Override
     public void reset() {
         behaviour.reset();
-        interactions.reset();
+        interactions.clear();
     }
 
     @Override
@@ -44,7 +44,7 @@ public abstract class AbstractCloseableMockHttpServer implements CloseableMockHt
     protected boolean handleByMock(final HttpServletRequest request, final HttpServletResponse response) {
         final RequestWrapper requestWrapper = wrapHttpRequest(request);
         final ResponseWrapper responseWrapper = wrapHttpResponse(response);
-        interactions.addInteraction(requestWrapper);
+        interactions.add(requestWrapper);
         return behaviour.applyBestMatchingRule(requestWrapper, responseWrapper);
     }
 

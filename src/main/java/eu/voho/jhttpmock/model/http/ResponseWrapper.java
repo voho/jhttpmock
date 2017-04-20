@@ -1,4 +1,4 @@
-package eu.voho.jhttpmock.model.interaction;
+package eu.voho.jhttpmock.model.http;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

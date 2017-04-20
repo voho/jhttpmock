@@ -3,8 +3,11 @@ package eu.voho.jhttpmock;
 import java.time.Duration;
 import java.util.Arrays;
 
+/**
+ * Stubbing that allows you to setup the response.
+ */
 public interface ResponseStubbing {
-    default ResponseStubbing withHeader(String name, String... values) {
+    default ResponseStubbing withHeader(final String name, final String... values) {
         return withHeader(name, Arrays.asList(values));
     }
 
@@ -14,11 +17,11 @@ public interface ResponseStubbing {
 
     ResponseStubbing withBody(String body);
 
-    ResponseStubbing withRandomDelay(Duration minDelay, Duration maxDelay);
-
-    ResponseStubbing withGaussianRandomDelay(Duration mean, Duration deviation);
-
-    default ResponseStubbing withDelay(Duration delay) {
+    default ResponseStubbing withFixedDelay(final Duration delay) {
         return withRandomDelay(delay, delay);
     }
+
+    ResponseStubbing withRandomDelay(Duration minDelay, Duration maxDelay);
+
+    ResponseStubbing withPoissonRandomDelay(Duration lambda);
 }

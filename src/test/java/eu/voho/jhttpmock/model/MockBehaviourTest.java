@@ -1,4 +1,4 @@
-package eu.voho.jhttpmock.model.behaviour;
+package eu.voho.jhttpmock.model;
 
 import org.junit.Before;
 import org.junit.Test;

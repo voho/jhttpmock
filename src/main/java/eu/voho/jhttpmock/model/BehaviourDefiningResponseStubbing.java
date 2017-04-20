@@ -1,21 +1,20 @@
-package eu.voho.jhttpmock.model.behaviour;
+package eu.voho.jhttpmock.model;
 
 import eu.voho.jhttpmock.ResponseStubbing;
-import eu.voho.jhttpmock.model.stub.ResponseStubbingData;
 
 import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BehaviourDefiningResponseStubbing implements ResponseStubbing {
-    private final ResponseStubbingData responseStubbingData;
+    private final ResponseConsumer responseConsumer;
 
-    public BehaviourDefiningResponseStubbing(final ResponseStubbingData responseStubbingData) {
-        this.responseStubbingData = responseStubbingData;
+    public BehaviourDefiningResponseStubbing(final ResponseConsumer responseConsumer) {
+        this.responseConsumer = responseConsumer;
     }
 
     @Override
     public ResponseStubbing withRandomDelay(final Duration minDelay, final Duration maxDelay) {
-        responseStubbingData.setDelayGenerator(() -> {
+        responseConsumer.setDelayGenerator(() -> {
             final long minMs = minDelay.toMillis();
             final long maxMs = maxDelay.toMillis();
             return Duration.ofMillis(nextRandomLong(minMs, maxMs));
@@ -25,11 +24,10 @@ public class BehaviourDefiningResponseStubbing implements ResponseStubbing {
     }
 
     @Override
-    public ResponseStubbing withGaussianRandomDelay(final Duration mean, final Duration deviation) {
-        responseStubbingData.setDelayGenerator(() -> {
-            final long meanMs = mean.toMillis();
-            final long deviationMs = deviation.toMillis();
-            final long delayMs = nextGaussianRandomLong(meanMs, deviationMs);
+    public ResponseStubbing withPoissonRandomDelay(final Duration lambda) {
+        responseConsumer.setDelayGenerator(() -> {
+            final long lambdaMs = lambda.toMillis();
+            final long delayMs = nextPoissonRandomLong(lambdaMs);
             return Duration.ofMillis(delayMs);
         });
 
@@ -38,25 +36,24 @@ public class BehaviourDefiningResponseStubbing implements ResponseStubbing {
 
     @Override
     public ResponseStubbing withHeader(final String name, final Iterable<String> values) {
-        responseStubbingData.addHeader(name, values);
+        responseConsumer.addHeader(name, values);
         return this;
     }
 
     @Override
     public ResponseStubbing withCode(final int code) {
-        responseStubbingData.setCode(code);
+        responseConsumer.setCode(code);
         return this;
     }
 
     @Override
     public ResponseStubbing withBody(final String body) {
-        responseStubbingData.setBody(body.toCharArray());
+        responseConsumer.setBody(body.toCharArray());
         return this;
     }
 
-    private long nextGaussianRandomLong(final long meanMs, final long stdevMs) {
-        final double gaussian = ThreadLocalRandom.current().nextGaussian();
-        return Math.max(0, Math.round((double) meanMs + gaussian * (double) stdevMs));
+    private long nextPoissonRandomLong(final double lambda) {
+        return Math.round(Math.log(1.0 - ThreadLocalRandom.current().nextDouble()) / (-1 / lambda));
     }
 
     private long nextRandomLong(final long minMs, final long maxMs) {
