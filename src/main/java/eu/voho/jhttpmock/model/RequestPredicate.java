@@ -1,13 +1,13 @@
 package eu.voho.jhttpmock.model;
 
 import eu.voho.jhttpmock.model.http.RequestWrapper;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -16,17 +16,17 @@ import java.util.function.Predicate;
  */
 class RequestPredicate implements Predicate<RequestWrapper> {
     private Predicate<RequestWrapper> predicate;
-    private Matcher<String> urlMatcher;
-    private Matcher<String> methodMatcher;
-    private Matcher<char[]> bodyMatcher;
+    private Predicate<String> urlMatcher;
+    private Predicate<String> methodMatcher;
+    private Predicate<char[]> bodyMatcher;
     private final List<KeyValueMatchers> headerMatchers;
     private final List<KeyValueMatchers> queryParameterMatchers;
 
     RequestPredicate() {
         predicate = (request) -> true;
-        urlMatcher = CoreMatchers.any(String.class);
-        methodMatcher = CoreMatchers.any(String.class);
-        bodyMatcher = CoreMatchers.any(char[].class);
+        urlMatcher = (request) -> true;
+        methodMatcher = (request) -> true;
+        bodyMatcher = (request) -> true;
         headerMatchers = new LinkedList<>();
         queryParameterMatchers = new LinkedList<>();
     }
@@ -34,9 +34,9 @@ class RequestPredicate implements Predicate<RequestWrapper> {
     @Override
     public boolean test(final RequestWrapper request) {
         return predicate.test(request)
-                && urlMatcher.matches(request.getUrl())
-                && methodMatcher.matches(request.getMethod())
-                && bodyMatcher.matches(request.getBody())
+                && urlMatcher.test(request.getUrl())
+                && methodMatcher.test(request.getMethod())
+                && bodyMatcher.test(request.getBody())
                 && matchKeyAndAllValues(headerMatchers, request.getHeaders())
                 && matchKeyAndAllValues(queryParameterMatchers, request.getQueryParameters());
     }
@@ -44,8 +44,8 @@ class RequestPredicate implements Predicate<RequestWrapper> {
     private boolean matchKeyAndAllValues(final List<KeyValueMatchers> matchers, final Map<String, String[]> values) {
         for (final KeyValueMatchers matcher : matchers) {
             for (final Map.Entry<String, String[]> entry : values.entrySet()) {
-                final boolean matchesKey = matcher.keyMatcher.matches(entry.getKey());
-                final boolean matchesValue = matcher.valueMatcher.matches(Arrays.asList(entry.getValue()));
+                final boolean matchesKey = matcher.keyMatcher.test(entry.getKey());
+                final boolean matchesValue = matcher.valueMatcher.test(new HashSet<>(Arrays.asList(entry.getValue())));
 
                 if (!matchesKey || !matchesValue) {
                     return false;
@@ -56,23 +56,23 @@ class RequestPredicate implements Predicate<RequestWrapper> {
         return true;
     }
 
-    void setUrlMatcher(final Matcher<String> urlMatcher) {
+    void setUrlMatcher(final Predicate<String> urlMatcher) {
         this.urlMatcher = urlMatcher;
     }
 
-    void setMethodMatcher(final Matcher<String> methodMatcher) {
+    void setMethodMatcher(final Predicate<String> methodMatcher) {
         this.methodMatcher = methodMatcher;
     }
 
-    void addHeaderMatcher(final Matcher<String> nameMatcher, final Matcher<Iterable<? extends String>> valueMatcher) {
+    void addHeaderMatcher(final Predicate<String> nameMatcher, final Predicate<Set<String>> valueMatcher) {
         this.headerMatchers.add(new KeyValueMatchers(nameMatcher, valueMatcher));
     }
 
-    void addQueryParameterMatcher(final Matcher<String> nameMatcher, final Matcher<Iterable<? extends String>> valueMatcher) {
+    void addQueryParameterMatcher(final Predicate<String> nameMatcher, final Predicate<Set<String>> valueMatcher) {
         this.queryParameterMatchers.add(new KeyValueMatchers(nameMatcher, valueMatcher));
     }
 
-    void setBodyMatcher(final Matcher<char[]> bodyMatcher) {
+    void setBodyMatcher(final Predicate<char[]> bodyMatcher) {
         this.bodyMatcher = bodyMatcher;
     }
 
@@ -81,10 +81,10 @@ class RequestPredicate implements Predicate<RequestWrapper> {
     }
 
     private static class KeyValueMatchers {
-        Matcher<String> keyMatcher;
-        Matcher<Iterable<? extends String>> valueMatcher;
+        Predicate<String> keyMatcher;
+        Predicate<Set<String>> valueMatcher;
 
-        KeyValueMatchers(final Matcher<String> keyMatcher, final Matcher<Iterable<? extends String>> valueMatcher) {
+        KeyValueMatchers(final Predicate<String> keyMatcher, final Predicate<Set<String>> valueMatcher) {
             this.keyMatcher = keyMatcher;
             this.valueMatcher = valueMatcher;
         }

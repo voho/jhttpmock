@@ -3,12 +3,11 @@ package eu.voho.jhttpmock.model;
 import eu.voho.jhttpmock.RequestStubbing;
 import eu.voho.jhttpmock.ResponseStubbing;
 import eu.voho.jhttpmock.model.http.RequestWrapper;
-import org.hamcrest.Matcher;
 
-import java.util.Collection;
+import java.util.Set;
 import java.util.function.Predicate;
 
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class VerificationRequestStubbing implements RequestStubbing {
     private final MockInteractions<RequestWrapper> mockInteractions;
@@ -26,31 +25,31 @@ public class VerificationRequestStubbing implements RequestStubbing {
     }
 
     @Override
-    public RequestStubbing withMethod(final Matcher<String> methodMatcher) {
+    public RequestStubbing withMethod(final Predicate<String> methodMatcher) {
         requestPredicate.setMethodMatcher(methodMatcher);
         return this;
     }
 
     @Override
-    public RequestStubbing withHeader(final Matcher<String> nameMatcher, final Matcher<Iterable<? extends String>> valueMatcher) {
+    public RequestStubbing withHeader(final Predicate<String> nameMatcher, final Predicate<Set<String>> valueMatcher) {
         requestPredicate.addHeaderMatcher(nameMatcher, valueMatcher);
         return this;
     }
 
     @Override
-    public RequestStubbing withQueryParameter(final Matcher<String> nameMatcher, final Matcher<Iterable<? extends String>> valueMatcher) {
+    public RequestStubbing withQueryParameter(final Predicate<String> nameMatcher, final Predicate<Set<String>> valueMatcher) {
         requestPredicate.addQueryParameterMatcher(nameMatcher, valueMatcher);
         return this;
     }
 
     @Override
-    public RequestStubbing withBody(final Matcher<char[]> bodyMatcher) {
+    public RequestStubbing withBody(final Predicate<char[]> bodyMatcher) {
         requestPredicate.setBodyMatcher(bodyMatcher);
         return this;
     }
 
     @Override
-    public RequestStubbing withUrl(final Matcher<String> urlMatcher) {
+    public RequestStubbing withUrl(final Predicate<String> urlMatcher) {
         requestPredicate.setUrlMatcher(urlMatcher);
         return this;
     }
@@ -61,11 +60,10 @@ public class VerificationRequestStubbing implements RequestStubbing {
     }
 
     @Override
-    public void wasReceivedTimes(final Matcher<Integer> timesMatcher) {
-        assertThat(
+    public void wasReceivedTimes(final Predicate<Integer> timesMatcher) {
+        assertTrue(
                 "The number of matching mock HTTP server invocations is different.",
-                mockInteractions.find(requestPredicate).size(),
-                timesMatcher
+                timesMatcher.test(mockInteractions.find(requestPredicate).size())
         );
     }
 }

@@ -1,11 +1,10 @@
 package eu.voho.jhttpmock;
 
 import eu.voho.jhttpmock.model.http.RequestWrapper;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
-import org.hamcrest.number.OrderingComparison;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -14,89 +13,81 @@ import java.util.function.Predicate;
 public interface RequestStubbing {
     RequestStubbing matching(Predicate<RequestWrapper> predicate);
 
-    RequestStubbing withMethod(Matcher<String> methodMatcher);
+    RequestStubbing withMethod(Predicate<String> methodMatcher);
 
     default RequestStubbing withHeadMethod() {
-        return withMethod(CoreMatchers.equalTo("HEAD"));
+        return withMethod("HEAD"::equalsIgnoreCase);
     }
 
     default RequestStubbing withPutMethod() {
-        return withMethod(CoreMatchers.equalTo("PUT"));
+        return withMethod("PUT"::equalsIgnoreCase);
     }
 
     default RequestStubbing withPostMethod() {
-        return withMethod(CoreMatchers.equalTo("POST"));
+        return withMethod("POST"::equalsIgnoreCase);
     }
 
     default RequestStubbing withDeleteMethod() {
-        return withMethod(CoreMatchers.equalTo("DELETE"));
+        return withMethod("DELETE"::equalsIgnoreCase);
     }
 
     default RequestStubbing withGetMethod() {
-        return withMethod(CoreMatchers.equalTo("GET"));
+        return withMethod("GET"::equalsIgnoreCase);
     }
 
-    RequestStubbing withHeader(Matcher<String> nameMatcher, Matcher<Iterable<? extends String>> valueMatcher);
+    RequestStubbing withHeader(Predicate<String> nameMatcher, Predicate<Set<String>> valueMatcher);
 
-    default RequestStubbing withHeader(final String name, final Matcher<Iterable<? extends String>> valueMatcher) {
-        return withHeader(CoreMatchers.equalTo(name), valueMatcher);
+    default RequestStubbing withHeaderEqualTo(final String name, final Set<String> values) {
+        return withHeader(name::equalsIgnoreCase, values::equals);
     }
 
-    default RequestStubbing withSingleHeaderEqualTo(final String name, final String value) {
-        return withHeader(CoreMatchers.equalTo(name), Matchers.contains(value));
+    default RequestStubbing withHeaderEqualTo(final String name, final String value) {
+        return withHeader(name::equalsIgnoreCase, Collections.singleton(value)::equals);
     }
 
-    RequestStubbing withQueryParameter(Matcher<String> nameMatcher, Matcher<Iterable<? extends String>> valueMatcher);
+    RequestStubbing withQueryParameter(Predicate<String> nameMatcher, Predicate<Set<String>> valueMatcher);
 
-    default RequestStubbing withQueryParameter(final String name, final Matcher<Iterable<? extends String>> valuesMatcher) {
-        return withQueryParameter(CoreMatchers.equalTo(name), valuesMatcher);
+    default RequestStubbing withQueryParameterEqualTo(final String name, final Set<String> values) {
+        return withQueryParameter(name::equalsIgnoreCase, values::equals);
     }
 
-    default RequestStubbing withSingleQueryParameterEqualTo(final String name, final String value) {
-        return withSingleQueryParameter(name, CoreMatchers.equalTo(value));
+    default RequestStubbing withQueryParameterEqualTo(final String name, final String value) {
+        return withQueryParameter(name::equalsIgnoreCase, Collections.singleton(value)::equals);
     }
 
-    default RequestStubbing withSingleQueryParameter(final String name, final Matcher<String> valueMatcher) {
-        return withSingleQueryParameter(CoreMatchers.equalTo(name), valueMatcher);
-    }
-
-    default RequestStubbing withSingleQueryParameter(final Matcher<String> nameMatcher, final Matcher<String> valueMatcher) {
-        return withQueryParameter(nameMatcher, Matchers.contains(valueMatcher));
-    }
-
-    RequestStubbing withBody(Matcher<char[]> bodyMatcher);
+    RequestStubbing withBody(Predicate<char[]> bodyMatcher);
 
     default RequestStubbing withBodyEqualTo(final String body) {
-        return withBody(CoreMatchers.equalTo(body.toCharArray()));
+        return withBodyEqualTo(body.toCharArray());
     }
 
     default RequestStubbing withBodyEqualTo(final char[] body) {
-        return withBody(CoreMatchers.equalTo(body));
+        return withBody(value -> Arrays.equals(body, value));
     }
 
-    RequestStubbing withUrl(Matcher<String> urlMatcher);
+    RequestStubbing withUrl(Predicate<String> urlMatcher);
 
     default RequestStubbing withUrlEqualTo(final String url) {
-        return withUrl(CoreMatchers.equalTo(url));
+        return withUrl(url::equalsIgnoreCase);
     }
 
     ResponseStubbing thenRespond();
 
-    void wasReceivedTimes(Matcher<Integer> timesMatcher);
+    void wasReceivedTimes(Predicate<Integer> timesMatcher);
 
     default void wasReceivedOnce() {
-        wasReceivedTimes(CoreMatchers.equalTo(1));
+        wasReceivedTimes(Integer.valueOf(1)::equals);
     }
 
     default void wasNeverReceived() {
-        wasReceivedTimes(CoreMatchers.equalTo(0));
+        wasReceivedTimes(Integer.valueOf(0)::equals);
     }
 
     default void wasReceivedAtMost(final int maxNumber) {
-        wasReceivedTimes(OrderingComparison.lessThanOrEqualTo(maxNumber));
+        wasReceivedTimes(times -> times <= maxNumber);
     }
 
     default void wasReceivedAtLeast(final int minNumber) {
-        wasReceivedTimes(OrderingComparison.greaterThanOrEqualTo(minNumber));
+        wasReceivedTimes(times -> times >= minNumber);
     }
 }
