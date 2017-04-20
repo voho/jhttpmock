@@ -5,7 +5,6 @@ import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,7 @@ import java.util.function.Predicate;
  * HTTP request matcher.
  * By default, it matches all requests.
  */
-public class RequestPredicate implements Predicate<RequestWrapper> {
+class RequestPredicate implements Predicate<RequestWrapper> {
     private Predicate<RequestWrapper> predicate;
     private Matcher<String> urlMatcher;
     private Matcher<String> methodMatcher;
@@ -65,11 +64,11 @@ public class RequestPredicate implements Predicate<RequestWrapper> {
         this.methodMatcher = methodMatcher;
     }
 
-    void addHeaderMatcher(final Matcher<String> nameMatcher, final Matcher<Collection<String>> valueMatcher) {
+    void addHeaderMatcher(final Matcher<String> nameMatcher, final Matcher<Iterable<? extends String>> valueMatcher) {
         this.headerMatchers.add(new KeyValueMatchers(nameMatcher, valueMatcher));
     }
 
-    void addQueryParameterMatcher(final Matcher<String> nameMatcher, final Matcher<Collection<String>> valueMatcher) {
+    void addQueryParameterMatcher(final Matcher<String> nameMatcher, final Matcher<Iterable<? extends String>> valueMatcher) {
         this.queryParameterMatchers.add(new KeyValueMatchers(nameMatcher, valueMatcher));
     }
 
@@ -77,15 +76,15 @@ public class RequestPredicate implements Predicate<RequestWrapper> {
         this.bodyMatcher = bodyMatcher;
     }
 
-    public void setPredicate(Predicate<RequestWrapper> predicate) {
+    void setPredicate(Predicate<RequestWrapper> predicate) {
         this.predicate = predicate;
     }
 
     private static class KeyValueMatchers {
         Matcher<String> keyMatcher;
-        Matcher<Collection<String>> valueMatcher;
+        Matcher<Iterable<? extends String>> valueMatcher;
 
-        KeyValueMatchers(final Matcher<String> keyMatcher, final Matcher<Collection<String>> valueMatcher) {
+        KeyValueMatchers(final Matcher<String> keyMatcher, final Matcher<Iterable<? extends String>> valueMatcher) {
             this.keyMatcher = keyMatcher;
             this.valueMatcher = valueMatcher;
         }

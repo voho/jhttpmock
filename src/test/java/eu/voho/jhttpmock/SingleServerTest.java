@@ -2,12 +2,10 @@ package eu.voho.jhttpmock;
 
 import eu.voho.jhttpmock.jetty.JettyMockHttpServer;
 import eu.voho.jhttpmock.junit.MockHttpServerRule;
-import org.apache.http.HttpResponse;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.time.Duration;
-import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,12 +23,10 @@ public class SingleServerTest {
                 .withPoissonRandomDelay(Duration.ofMillis(50))
                 .withBody("Hello!");
 
-        PrimitiveHttpClient.executeGetAndVerify("http://localhost:8080/ping", new Consumer<HttpResponse>() {
-            @Override
-            public void accept(final HttpResponse response) {
-                assertThat(response.getStatusLine().getStatusCode()).isEqualTo(201);
-            }
-        });
+        PrimitiveHttpClient.executeGetAndVerify(
+                "http://localhost:8080/ping",
+                response -> assertThat(response.getStatusLine().getStatusCode()).isEqualTo(201)
+        );
 
         mock
                 .verifyThatRequest()

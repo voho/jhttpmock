@@ -28,12 +28,10 @@ public class MultipleServersTest {
                 .withBody("Hello, this is 2.");
 
         PrimitiveHttpClient.executeGetAndVerify("http://localhost:8090/", r -> {
-            assertThat(r.getStatusLine().getStatusCode()).isEqualTo(200);
             assertThat(PrimitiveHttpClient.toString(r)).isEqualTo("Hello, this is 1.");
         });
 
         PrimitiveHttpClient.executeGetAndVerify("http://localhost:8091/", r -> {
-            assertThat(r.getStatusLine().getStatusCode()).isEqualTo(200);
             assertThat(PrimitiveHttpClient.toString(r)).isEqualTo("Hello, this is 2.");
         });
 

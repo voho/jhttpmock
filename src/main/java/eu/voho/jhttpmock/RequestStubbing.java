@@ -6,7 +6,6 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.number.OrderingComparison;
 
-import java.util.Collection;
 import java.util.function.Predicate;
 
 /**
@@ -37,23 +36,19 @@ public interface RequestStubbing {
         return withMethod(CoreMatchers.equalTo("GET"));
     }
 
-    RequestStubbing withHeader(Matcher<String> nameMatcher, Matcher<Collection<String>> valueMatcher);
+    RequestStubbing withHeader(Matcher<String> nameMatcher, Matcher<Iterable<? extends String>> valueMatcher);
 
-    default RequestStubbing withHeader(final String name, final Matcher<Collection<String>> valueMatcher) {
+    default RequestStubbing withHeader(final String name, final Matcher<Iterable<? extends String>> valueMatcher) {
         return withHeader(CoreMatchers.equalTo(name), valueMatcher);
     }
 
     default RequestStubbing withSingleHeaderEqualTo(final String name, final String value) {
-        final Matcher<Collection<String>> valueMatcher = Matchers.<Collection<String>>allOf(
-                Matchers.iterableWithSize(1),
-                Matchers.contains(value)
-        );
-        return withHeader(CoreMatchers.equalTo(name), valueMatcher);
+        return withHeader(CoreMatchers.equalTo(name), Matchers.contains(value));
     }
 
-    RequestStubbing withQueryParameter(Matcher<String> nameMatcher, Matcher<Collection<String>> valueMatcher);
+    RequestStubbing withQueryParameter(Matcher<String> nameMatcher, Matcher<Iterable<? extends String>> valueMatcher);
 
-    default RequestStubbing withQueryParameter(final String name, final Matcher<Collection<String>> valuesMatcher) {
+    default RequestStubbing withQueryParameter(final String name, final Matcher<Iterable<? extends String>> valuesMatcher) {
         return withQueryParameter(CoreMatchers.equalTo(name), valuesMatcher);
     }
 
@@ -66,11 +61,7 @@ public interface RequestStubbing {
     }
 
     default RequestStubbing withSingleQueryParameter(final Matcher<String> nameMatcher, final Matcher<String> valueMatcher) {
-        final Matcher<Collection<String>> valuesMatcher = Matchers.<Collection<String>>allOf(
-                Matchers.iterableWithSize(1),
-                Matchers.contains(valueMatcher)
-        );
-        return withQueryParameter(nameMatcher, valuesMatcher);
+        return withQueryParameter(nameMatcher, Matchers.contains(valueMatcher));
     }
 
     RequestStubbing withBody(Matcher<char[]> bodyMatcher);

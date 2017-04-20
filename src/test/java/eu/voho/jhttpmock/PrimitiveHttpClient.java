@@ -12,6 +12,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 public class PrimitiveHttpClient {
+    public static void executeGetAndVerify(final String url) throws IOException {
+        executeGetAndVerify(url, r -> {
+        });
+    }
+
     public static void executeGetAndVerify(final String url, final Consumer<HttpResponse> responseValidator) throws IOException {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             final HttpGet get = new HttpGet(url);

@@ -20,7 +20,7 @@ import java.util.function.Supplier;
  * <li>no delay</li>
  * </ul>
  */
-public class ResponseConsumer implements Consumer<ResponseWrapper> {
+class ResponseConsumer implements Consumer<ResponseWrapper> {
     private int code;
     private char[] body;
     private final Map<String, Iterable<String>> headers;

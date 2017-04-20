@@ -18,14 +18,14 @@ public class ResponseWrapper {
         this.response.setStatus(code);
     }
 
-    public void write(final char[] body) throws IOException {
-        response.getWriter().write(body);
-        response.getWriter().flush();
-    }
-
     public void addHeader(final Map<String, Iterable<String>> headers) {
         headers.forEach((name, values) -> {
             values.forEach(value -> response.addHeader(name, value));
         });
+    }
+
+    public void write(final char[] body) throws IOException {
+        response.getWriter().write(body);
+        response.getWriter().flush();
     }
 }

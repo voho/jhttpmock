@@ -1,19 +1,15 @@
-package eu.voho.jhttpmock;
+package eu.voho.jhttpmock.model;
 
+import eu.voho.jhttpmock.PrimitiveHttpClient;
 import eu.voho.jhttpmock.jetty.JettyMockHttpServer;
 import eu.voho.jhttpmock.junit.MockHttpServerRule;
-import org.apache.http.HttpResponse;
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.function.Consumer;
 
-public class RequestMatcherTest {
+public class RequestMatcherUsingQueryParameterTest {
     @Rule
     public MockHttpServerRule mock = new MockHttpServerRule(new JettyMockHttpServer(8080));
 
@@ -25,15 +21,7 @@ public class RequestMatcherTest {
                 .thenRespond()
                 .withCode(200);
 
-        PrimitiveHttpClient.executeGetAndVerify(
-                "http://localhost:8080/?p1=v1",
-                new Consumer<HttpResponse>() {
-                    @Override
-                    public void accept(HttpResponse response) {
-
-                    }
-                }
-        );
+        PrimitiveHttpClient.executeGetAndVerify("http://localhost:8080/?p1=v1");
 
         mock
                 .verifyThatRequest()
@@ -59,29 +47,11 @@ public class RequestMatcherTest {
                 .thenRespond()
                 .withCode(200);
 
-        PrimitiveHttpClient.executeGetAndVerify(
-                "http://localhost:8080/?p1=v1&p1=v2",
-                new Consumer<HttpResponse>() {
-                    @Override
-                    public void accept(HttpResponse response) {
-
-                    }
-                }
-        );
+        PrimitiveHttpClient.executeGetAndVerify("http://localhost:8080/?p1=v1&p1=v2");
 
         mock
                 .verifyThatRequest()
-                .withQueryParameter("p1", new TypeSafeMatcher<Collection<String>>() {
-                    @Override
-                    protected boolean matchesSafely(Collection<String> strings) {
-                        return strings.containsAll(Arrays.asList("v1", "V2"));
-                    }
-
-                    @Override
-                    public void describeTo(Description description) {
-                        // TODO
-                    }
-                });
+                .withQueryParameter("p1", Matchers.containsInAnyOrder("v1", "v2"));
 
         mock
                 .verifyThatRequest()

@@ -32,13 +32,13 @@ public class VerificationRequestStubbing implements RequestStubbing {
     }
 
     @Override
-    public RequestStubbing withHeader(final Matcher<String> nameMatcher, final Matcher<Collection<String>> valueMatcher) {
+    public RequestStubbing withHeader(final Matcher<String> nameMatcher, final Matcher<Iterable<? extends String>> valueMatcher) {
         requestPredicate.addHeaderMatcher(nameMatcher, valueMatcher);
         return this;
     }
 
     @Override
-    public RequestStubbing withQueryParameter(final Matcher<String> nameMatcher, final Matcher<Collection<String>> valueMatcher) {
+    public RequestStubbing withQueryParameter(final Matcher<String> nameMatcher, final Matcher<Iterable<? extends String>> valueMatcher) {
         requestPredicate.addQueryParameterMatcher(nameMatcher, valueMatcher);
         return this;
     }
