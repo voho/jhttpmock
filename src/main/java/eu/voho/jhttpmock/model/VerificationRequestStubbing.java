@@ -6,6 +6,7 @@ import eu.voho.jhttpmock.model.http.RequestWrapper;
 import org.hamcrest.Matcher;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import static org.junit.Assert.assertThat;
 
@@ -16,6 +17,12 @@ public class VerificationRequestStubbing implements RequestStubbing {
     public VerificationRequestStubbing(final MockInteractions<RequestWrapper> mockInteractions) {
         this.mockInteractions = mockInteractions;
         this.requestPredicate = new RequestPredicate();
+    }
+
+    @Override
+    public RequestStubbing matching(final Predicate<RequestWrapper> predicate) {
+        requestPredicate.setPredicate(predicate);
+        return this;
     }
 
     @Override

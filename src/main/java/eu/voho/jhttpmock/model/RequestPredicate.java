@@ -16,6 +16,7 @@ import java.util.function.Predicate;
  * By default, it matches all requests.
  */
 public class RequestPredicate implements Predicate<RequestWrapper> {
+    private Predicate<RequestWrapper> predicate;
     private Matcher<String> urlMatcher;
     private Matcher<String> methodMatcher;
     private Matcher<char[]> bodyMatcher;
@@ -23,6 +24,7 @@ public class RequestPredicate implements Predicate<RequestWrapper> {
     private final List<KeyValueMatchers> queryParameterMatchers;
 
     RequestPredicate() {
+        predicate = (request) -> true;
         urlMatcher = CoreMatchers.any(String.class);
         methodMatcher = CoreMatchers.any(String.class);
         bodyMatcher = CoreMatchers.any(char[].class);
@@ -32,7 +34,8 @@ public class RequestPredicate implements Predicate<RequestWrapper> {
 
     @Override
     public boolean test(final RequestWrapper request) {
-        return urlMatcher.matches(request.getUrl())
+        return predicate.test(request)
+                && urlMatcher.matches(request.getUrl())
                 && methodMatcher.matches(request.getMethod())
                 && bodyMatcher.matches(request.getBody())
                 && matchKeyAndAllValues(headerMatchers, request.getHeaders())
@@ -72,6 +75,10 @@ public class RequestPredicate implements Predicate<RequestWrapper> {
 
     void setBodyMatcher(final Matcher<char[]> bodyMatcher) {
         this.bodyMatcher = bodyMatcher;
+    }
+
+    public void setPredicate(Predicate<RequestWrapper> predicate) {
+        this.predicate = predicate;
     }
 
     private static class KeyValueMatchers {

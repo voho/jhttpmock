@@ -7,6 +7,7 @@ import eu.voho.jhttpmock.model.http.ResponseWrapper;
 import org.hamcrest.Matcher;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 public class BehaviourDefiningRequestStubbing implements RequestStubbing {
     private final RequestPredicate requestPredicate;
@@ -16,6 +17,12 @@ public class BehaviourDefiningRequestStubbing implements RequestStubbing {
         requestPredicate = new RequestPredicate();
         responseConsumer = new ResponseConsumer();
         targetMockBehaviour.addRule(requestPredicate, responseConsumer);
+    }
+
+    @Override
+    public RequestStubbing matching(final Predicate<RequestWrapper> predicate) {
+        requestPredicate.setPredicate(predicate);
+        return this;
     }
 
     @Override

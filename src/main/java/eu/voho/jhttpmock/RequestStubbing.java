@@ -1,16 +1,20 @@
 package eu.voho.jhttpmock;
 
+import eu.voho.jhttpmock.model.http.RequestWrapper;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.number.OrderingComparison;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 /**
  * Stubbing that allows you to setup the request matcher.
  */
 public interface RequestStubbing {
+    RequestStubbing matching(Predicate<RequestWrapper> predicate);
+
     RequestStubbing withMethod(Matcher<String> methodMatcher);
 
     default RequestStubbing withHeadMethod() {
