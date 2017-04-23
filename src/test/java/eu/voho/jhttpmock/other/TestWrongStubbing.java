@@ -1,4 +1,4 @@
-package eu.voho.jhttpmock.model;
+package eu.voho.jhttpmock.other;
 
 import eu.voho.jhttpmock.jetty.JettyMockHttpServer;
 import eu.voho.jhttpmock.junit.MockHttpServerRule;
