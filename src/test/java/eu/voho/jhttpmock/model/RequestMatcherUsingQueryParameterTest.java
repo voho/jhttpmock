@@ -1,8 +1,8 @@
 package eu.voho.jhttpmock.model;
 
-import eu.voho.jhttpmock.PrimitiveHttpClient;
 import eu.voho.jhttpmock.jetty.JettyMockHttpServer;
 import eu.voho.jhttpmock.junit.MockHttpServerRule;
+import eu.voho.jhttpmock.utility.TestUtility;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class RequestMatcherUsingQueryParameterTest {
                 .thenRespond()
                 .withCode(200);
 
-        PrimitiveHttpClient.executeGetAndVerify(
+        TestUtility.executeGetAndVerify(
                 a -> a.setURI(URI.create("http://localhost:8080/?p1=v1"))
         );
 
@@ -51,7 +51,7 @@ public class RequestMatcherUsingQueryParameterTest {
                 .thenRespond()
                 .withCode(200);
 
-        PrimitiveHttpClient.executeGetAndVerify(
+        TestUtility.executeGetAndVerify(
                 a -> a.setURI(URI.create("http://localhost:8080/?p1=v1&p1=v2"))
         );
 

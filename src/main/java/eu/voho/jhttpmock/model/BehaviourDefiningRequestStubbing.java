@@ -20,7 +20,7 @@ public class BehaviourDefiningRequestStubbing implements RequestStubbing {
 
     @Override
     public RequestStubbing matching(final Predicate<RequestWrapper> predicate) {
-        requestPredicate.setPredicate(predicate);
+        requestPredicate.setCustomPredicate(predicate);
         return this;
     }
 

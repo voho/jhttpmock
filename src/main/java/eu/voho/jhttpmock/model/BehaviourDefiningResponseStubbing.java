@@ -2,6 +2,7 @@ package eu.voho.jhttpmock.model;
 
 import eu.voho.jhttpmock.ResponseStubbing;
 
+import javax.servlet.http.Cookie;
 import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -37,6 +38,12 @@ public class BehaviourDefiningResponseStubbing implements ResponseStubbing {
     @Override
     public ResponseStubbing withHeader(final String name, final Iterable<String> values) {
         responseConsumer.addHeader(name, values);
+        return this;
+    }
+
+    @Override
+    public ResponseStubbing withCookie(final Cookie cookie) {
+        responseConsumer.addCookie(cookie);
         return this;
     }
 

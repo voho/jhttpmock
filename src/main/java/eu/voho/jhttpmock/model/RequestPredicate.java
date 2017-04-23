@@ -1,98 +1,80 @@
 package eu.voho.jhttpmock.model;
 
 import eu.voho.jhttpmock.model.http.RequestWrapper;
+import eu.voho.jhttpmock.model.misc.MultiValueStringMap;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
 /**
  * HTTP request matcher.
  * By default, it matches all requests.
+ * Only one matcher is enabled for: URL, HTTP method, request body, and only one custom predicate.
  */
 class RequestPredicate implements Predicate<RequestWrapper> {
-    private Predicate<RequestWrapper> predicate;
     private Predicate<String> urlMatcher;
     private Predicate<String> methodMatcher;
     private Predicate<char[]> bodyMatcher;
-    private final List<KeyValueMatchers> headerMatchers;
-    private final List<KeyValueMatchers> queryParameterMatchers;
+    private Predicate<RequestWrapper> customPredicate;
+    private final List<Predicate<MultiValueStringMap>> headerMatchers;
+    private final List<Predicate<MultiValueStringMap>> queryParameterMatchers;
 
     RequestPredicate() {
-        predicate = (request) -> true;
-        urlMatcher = (request) -> true;
-        methodMatcher = (request) -> true;
-        bodyMatcher = (request) -> true;
         headerMatchers = new LinkedList<>();
         queryParameterMatchers = new LinkedList<>();
     }
 
     @Override
     public boolean test(final RequestWrapper request) {
-        return predicate.test(request)
-                && urlMatcher.test(request.getUrl())
-                && methodMatcher.test(request.getMethod())
-                && bodyMatcher.test(request.getBody())
-                && matchKeyAndAllValues(headerMatchers, request.getHeaders())
-                && matchKeyAndAllValues(queryParameterMatchers, request.getQueryParameters());
-    }
-
-    private boolean matchKeyAndAllValues(final List<KeyValueMatchers> matchers, final Map<String, String[]> values) {
-        if (matchers.isEmpty()) {
-            return true;
-        } else {
-            for (final KeyValueMatchers matcher : matchers) {
-                for (final Map.Entry<String, String[]> entry : values.entrySet()) {
-                    final boolean matchesKey = matcher.keyMatcher.test(entry.getKey());
-
-                    if (matchesKey) {
-                        final boolean matchesValue = matcher.valueMatcher.test(new HashSet<>(Arrays.asList(entry.getValue())));
-
-                        if (!matchesValue) {
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
-        }
+        return nullOrTest(urlMatcher, request.getUrl())
+                && nullOrTest(methodMatcher, request.getMethod())
+                && nullOrTest(bodyMatcher, request.getBody())
+                && nullOrTest(customPredicate, request)
+                && nullOrTest(headerMatchers, new MultiValueStringMap(request.getHeaders()))
+                && nullOrTest(queryParameterMatchers, new MultiValueStringMap(request.getQueryParameters()));
     }
 
     void setUrlMatcher(final Predicate<String> urlMatcher) {
+        checkNull(this.urlMatcher, "Only one matcher for URL is allowed.");
         this.urlMatcher = urlMatcher;
     }
 
     void setMethodMatcher(final Predicate<String> methodMatcher) {
+        checkNull(this.methodMatcher, "Only one matcher for HTTP method is allowed.");
         this.methodMatcher = methodMatcher;
     }
 
-    void addHeaderMatcher(final Predicate<String> nameMatcher, final Predicate<Set<String>> valueMatcher) {
-        this.headerMatchers.add(new KeyValueMatchers(nameMatcher, valueMatcher));
-    }
-
-    void addQueryParameterMatcher(final Predicate<String> nameMatcher, final Predicate<Set<String>> valueMatcher) {
-        this.queryParameterMatchers.add(new KeyValueMatchers(nameMatcher, valueMatcher));
-    }
-
     void setBodyMatcher(final Predicate<char[]> bodyMatcher) {
+        checkNull(this.bodyMatcher, "Only one matcher for HTTP request body is allowed.");
         this.bodyMatcher = bodyMatcher;
     }
 
-    void setPredicate(Predicate<RequestWrapper> predicate) {
-        this.predicate = predicate;
+    void setCustomPredicate(final Predicate<RequestWrapper> customPredicate) {
+        checkNull(this.methodMatcher, "Only one custom predicate is allowed.");
+        this.customPredicate = customPredicate;
     }
 
-    private static class KeyValueMatchers {
-        Predicate<String> keyMatcher;
-        Predicate<Set<String>> valueMatcher;
+    void addHeaderMatcher(final Predicate<String> nameMatcher, final Predicate<Set<String>> valueMatcher) {
+        this.headerMatchers.add(map -> map.contains(nameMatcher, valueMatcher));
+    }
 
-        KeyValueMatchers(final Predicate<String> keyMatcher, final Predicate<Set<String>> valueMatcher) {
-            this.keyMatcher = keyMatcher;
-            this.valueMatcher = valueMatcher;
+    void addQueryParameterMatcher(final Predicate<String> nameMatcher, final Predicate<Set<String>> valueMatcher) {
+        this.queryParameterMatchers.add(map -> map.contains(nameMatcher, valueMatcher));
+    }
+
+    private static void checkNull(final Predicate<?> matcher, final String messageIfNull) {
+        if (matcher != null) {
+            throw new UnsupportedOperationException(messageIfNull);
         }
+    }
+
+    private static <T> boolean nullOrTest(final List<Predicate<T>> predicates, final T value) {
+        return predicates == null || predicates.isEmpty() || predicates.stream().allMatch(predicate -> predicate.test(value));
+    }
+
+    private static <T> boolean nullOrTest(final Predicate<T> predicate, final T value) {
+        return predicate == null || predicate.test(value);
     }
 }

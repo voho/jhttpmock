@@ -1,5 +1,6 @@
 package eu.voho.jhttpmock;
 
+import javax.servlet.http.Cookie;
 import java.time.Duration;
 import java.util.Arrays;
 
@@ -12,6 +13,12 @@ public interface ResponseStubbing {
     }
 
     ResponseStubbing withHeader(String name, Iterable<String> values);
+
+    ResponseStubbing withCookie(Cookie cookie);
+
+    default ResponseStubbing withCookie(final String name, final String value) {
+        return withCookie(new Cookie(name, value));
+    }
 
     ResponseStubbing withCode(int code);
 

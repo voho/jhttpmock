@@ -5,16 +5,16 @@ import eu.voho.jhttpmock.RequestStubbing;
 import eu.voho.jhttpmock.model.BehaviourDefiningRequestStubbing;
 import eu.voho.jhttpmock.model.MockBehaviour;
 import eu.voho.jhttpmock.model.MockInteractions;
+import eu.voho.jhttpmock.model.VerificationRequestStubbing;
 import eu.voho.jhttpmock.model.http.RequestWrapper;
 import eu.voho.jhttpmock.model.http.ResponseWrapper;
-import eu.voho.jhttpmock.model.VerificationRequestStubbing;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * Abstract base class for mock HTTP servers.
- * Stores mock behaviour and interactions.
+ * Encapsulates mock behaviour and interactions.
  */
 public abstract class AbstractCloseableMockHttpServer implements CloseableMockHttpServer {
     private final MockBehaviour<RequestWrapper, ResponseWrapper> behaviour;

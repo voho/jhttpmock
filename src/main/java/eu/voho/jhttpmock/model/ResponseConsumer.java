@@ -2,11 +2,13 @@ package eu.voho.jhttpmock.model;
 
 import eu.voho.jhttpmock.model.http.ResponseWrapper;
 
+import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -17,6 +19,7 @@ import java.util.function.Supplier;
  * <li>status code: 200 OK</li>
  * <li>empty body</li>
  * <li>no headers</li>
+ * <li>no cookies</li>
  * <li>no delay</li>
  * </ul>
  */
@@ -24,32 +27,52 @@ class ResponseConsumer implements Consumer<ResponseWrapper> {
     private int code;
     private char[] body;
     private final Map<String, Iterable<String>> headers;
-    private Optional<Supplier<Duration>> delayGenerator;
+    private final List<Cookie> cookies;
+    private Supplier<Duration> delayGenerator;
 
     ResponseConsumer() {
         this.code = 200;
         this.body = new char[0];
         this.headers = new LinkedHashMap<>();
-        this.delayGenerator = Optional.empty();
+        this.cookies = new LinkedList<>();
     }
 
     @Override
     public void accept(final ResponseWrapper response) {
-        delayGenerator.ifPresent(delaySupplier -> {
+        applyDelay();
+        applyStatus(response);
+        applyHeaders(response);
+        applyCookies(response);
+        addBody(response);
+    }
+
+    private void applyDelay() {
+        if (delayGenerator != null) {
             try {
-                Thread.sleep(delaySupplier.get().toMillis());
+                Thread.sleep(delayGenerator.get().toMillis());
             } catch (InterruptedException e) {
                 throw new RuntimeException("Cannot sleep.", e);
             }
-        });
+        }
+    }
 
+    private void applyStatus(final ResponseWrapper response) {
         response.setStatus(code);
-        response.addHeader(headers);
+    }
 
+    private void applyHeaders(final ResponseWrapper response) {
+        headers.forEach(response::addHeader);
+    }
+
+    private void applyCookies(final ResponseWrapper response) {
+        cookies.forEach(response::addCookies);
+    }
+
+    private void addBody(final ResponseWrapper response) {
         try {
             response.write(body);
         } catch (IOException e) {
-            // TODO
+            throw new IllegalStateException("Cannot write response body.", e);
         }
     }
 
@@ -65,7 +88,11 @@ class ResponseConsumer implements Consumer<ResponseWrapper> {
         this.headers.put(name, values);
     }
 
+    void addCookie(final Cookie cookie) {
+        this.cookies.add(cookie);
+    }
+
     void setDelayGenerator(final Supplier<Duration> delayGenerator) {
-        this.delayGenerator = Optional.of(delayGenerator);
+        this.delayGenerator = delayGenerator;
     }
 }

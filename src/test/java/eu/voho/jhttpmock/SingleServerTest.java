@@ -2,6 +2,7 @@ package eu.voho.jhttpmock;
 
 import eu.voho.jhttpmock.jetty.JettyMockHttpServer;
 import eu.voho.jhttpmock.junit.MockHttpServerRule;
+import eu.voho.jhttpmock.utility.TestUtility;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -15,6 +16,14 @@ public class SingleServerTest {
     public MockHttpServerRule mock = new MockHttpServerRule(new JettyMockHttpServer(8080));
 
     @Test
+    public void testUrls() {
+        assertThat(mock.getLocalhostHttpsUri()).isEqualTo(URI.create("https://localhost:8080/"));
+        assertThat(mock.getLocalhostHttpUri()).isEqualTo(URI.create("http://localhost:8080/"));
+        assertThat(mock.getLocalhostHttpsUri("/whatever")).isEqualTo(URI.create("https://localhost:8080/whatever"));
+        assertThat(mock.getLocalhostHttpUri("/whatever")).isEqualTo(URI.create("http://localhost:8080/whatever"));
+    }
+
+    @Test
     public void testSingleRound() throws Exception {
         mock
                 .onRequest()
@@ -24,8 +33,8 @@ public class SingleServerTest {
                 .withPoissonRandomDelay(Duration.ofMillis(50))
                 .withBody("Hello!");
 
-        PrimitiveHttpClient.executeGetAndVerify(
-                a -> a.setURI(URI.create("http://localhost:8080/ping")),
+        TestUtility.executeGetAndVerify(
+                a -> a.setURI(mock.getLocalhostHttpUri("/ping")),
                 response -> assertThat(response.getStatusLine().getStatusCode()).isEqualTo(201)
         );
 

@@ -1,6 +1,6 @@
 package eu.voho.jhttpmock.model;
 
-import eu.voho.jhttpmock.PrimitiveHttpClient;
+import eu.voho.jhttpmock.utility.TestUtility;
 import eu.voho.jhttpmock.jetty.JettyMockHttpServer;
 import eu.voho.jhttpmock.junit.MockHttpServerRule;
 import org.junit.Rule;
@@ -23,7 +23,7 @@ public class RequestMatcherUsingHeaderTest {
                 .thenRespond()
                 .withCode(200);
 
-        PrimitiveHttpClient.executeGetAndVerify(
+        TestUtility.executeGetAndVerify(
                 a -> {
                     a.setURI(URI.create("http://localhost:8080"));
                     a.addHeader("h1", "v1");
@@ -54,7 +54,7 @@ public class RequestMatcherUsingHeaderTest {
                 .thenRespond()
                 .withCode(200);
 
-        PrimitiveHttpClient.executeGetAndVerify(
+        TestUtility.executeGetAndVerify(
                 a -> {
                     a.setURI(URI.create("http://localhost:8080/?p1=v1&p1=v2"));
                     a.addHeader("h1", "v1");
