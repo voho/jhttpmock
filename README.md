@@ -7,8 +7,6 @@
 
 Mock HTTP Server for Java built with Jetty and JUnit.
 
-> TODO: cleanup, unit tests
-
 ## Quick Example
 
 The example is using JHttpMock as a JUnit rule.
@@ -27,7 +25,7 @@ public class BasicUseCase {
             .withUrlEqualTo("/ping")
             .thenRespond()
             .withCode(200)
-            .withGaussianRandomDelay(Duration.ofMillis(50), Duration.ofMillis(30))
+            .withRandomDelay(Duration.ofMillis(30), Duration.ofMillis(50))
             .withBody("Hello!"); 
                    
         // ...send HTTP GET request...
@@ -42,17 +40,49 @@ public class BasicUseCase {
 }
 ```
 
-## Properties you can match the HTTP request on
+### Properties you can match the HTTP request on
 
 - method (GET, POST, etc.)
 - URL
 - header(s)
 - query parameter(s)
-- body 
+- request body 
 
-## Response properties you can set
+### Response properties you can set
 
 - status code
 - header(s)
-- body
-- delay (fixed, random, gaussian random)
+- cookie(s)
+- response body
+- delay (fixed, random, poisson)
+
+## Usage
+
+Add this to your `pom.xml` file:
+
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+
+```xml
+<dependency>
+    <groupId>com.github.voho</groupId>
+    <artifactId>jhttpmock</artifactId>
+    <version>0.9-RC1</version>
+</dependency>
+```
+
+## Release Notes
+
+### 1.0 (not yet released)
+
+- updated readme
+
+### [0.9-RC1](https://jitpack.io/#voho/jhttpmock/0.9-RC1)
+
+- initial release
