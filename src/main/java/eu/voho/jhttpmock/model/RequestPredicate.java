@@ -52,16 +52,16 @@ class RequestPredicate implements Predicate<RequestWrapper> {
     }
 
     void setCustomPredicate(final Predicate<RequestWrapper> customPredicate) {
-        checkNull(this.methodMatcher, "Only one custom predicate is allowed.");
+        checkNull(methodMatcher, "Only one custom predicate is allowed.");
         this.customPredicate = customPredicate;
     }
 
     void addHeaderMatcher(final Predicate<String> nameMatcher, final Predicate<Set<String>> valueMatcher) {
-        this.headerMatchers.add(map -> map.contains(nameMatcher, valueMatcher));
+        headerMatchers.add(map -> map.contains(nameMatcher, valueMatcher));
     }
 
     void addQueryParameterMatcher(final Predicate<String> nameMatcher, final Predicate<Set<String>> valueMatcher) {
-        this.queryParameterMatchers.add(map -> map.contains(nameMatcher, valueMatcher));
+        queryParameterMatchers.add(map -> map.contains(nameMatcher, valueMatcher));
     }
 
     private static void checkNull(final Predicate<?> matcher, final String messageIfNull) {

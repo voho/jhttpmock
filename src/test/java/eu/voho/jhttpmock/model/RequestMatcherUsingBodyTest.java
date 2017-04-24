@@ -41,9 +41,7 @@ public class RequestMatcherUsingBodyTest {
                     post.setURI(mock.getLocalhostHttpUri());
                     post.setEntity(TestUtility.toEntity(EITHER_BODY));
                 },
-                response -> {
-                    assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200);
-                }
+                response -> assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200)
         );
 
         TestUtility.executePostAndVerify(
@@ -51,9 +49,7 @@ public class RequestMatcherUsingBodyTest {
                     post.setURI(mock.getLocalhostHttpUri());
                     post.setEntity(TestUtility.toEntity(ANOTHER_BODY));
                 },
-                response -> {
-                    assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200);
-                }
+                response -> assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200)
         );
 
         mock

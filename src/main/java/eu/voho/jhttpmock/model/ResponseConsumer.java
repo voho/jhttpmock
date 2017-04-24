@@ -31,10 +31,10 @@ class ResponseConsumer implements Consumer<ResponseWrapper> {
     private Supplier<Duration> delayGenerator;
 
     ResponseConsumer() {
-        this.code = 200;
-        this.body = new char[0];
-        this.headers = new LinkedHashMap<>();
-        this.cookies = new LinkedList<>();
+        code = 200;
+        body = new char[0];
+        headers = new LinkedHashMap<>();
+        cookies = new LinkedList<>();
     }
 
     @Override
@@ -85,11 +85,11 @@ class ResponseConsumer implements Consumer<ResponseWrapper> {
     }
 
     void addHeader(final String name, final Iterable<String> values) {
-        this.headers.put(name, values);
+        headers.put(name, values);
     }
 
     void addCookie(final Cookie cookie) {
-        this.cookies.add(cookie);
+        cookies.add(cookie);
     }
 
     void setDelayGenerator(final Supplier<Duration> delayGenerator) {

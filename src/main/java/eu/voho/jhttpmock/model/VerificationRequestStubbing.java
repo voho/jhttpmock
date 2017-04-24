@@ -15,7 +15,7 @@ public class VerificationRequestStubbing implements RequestStubbing {
 
     public VerificationRequestStubbing(final MockInteractions<RequestWrapper> mockInteractions) {
         this.mockInteractions = mockInteractions;
-        this.requestPredicate = new RequestPredicate();
+        requestPredicate = new RequestPredicate();
     }
 
     @Override

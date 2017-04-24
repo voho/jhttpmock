@@ -19,11 +19,11 @@ public class RequestWrapper {
     private final char[] body;
 
     public RequestWrapper(final HttpServletRequest request) {
-        this.method = request.getMethod();
-        this.url = request.getRequestURI();
-        this.headers = copyHeaders(request);
-        this.queryParameters = copyQueryParameters(request);
-        this.body = copyBody(request);
+        method = request.getMethod();
+        url = request.getRequestURI();
+        headers = copyHeaders(request);
+        queryParameters = copyQueryParameters(request);
+        body = copyBody(request);
     }
 
     public String getMethod() {
@@ -41,9 +41,7 @@ public class RequestWrapper {
     private Map<String, String[]> copyHeaders(final HttpServletRequest request) {
         final Map<String, String[]> headers = new LinkedHashMap<>();
         if (request.getHeaderNames() != null) {
-            Collections.list(request.getHeaderNames()).forEach(hn -> {
-                headers.put(hn, Collections.list(request.getHeaders(hn)).stream().toArray(String[]::new));
-            });
+            Collections.list(request.getHeaderNames()).forEach(hn -> headers.put(hn, Collections.list(request.getHeaders(hn)).stream().toArray(String[]::new)));
         }
         return headers;
     }

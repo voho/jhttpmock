@@ -16,7 +16,7 @@ public class ResponseWrapper {
     }
 
     public void setStatus(final int code) {
-        this.response.setStatus(code);
+        response.setStatus(code);
     }
 
     public void addHeader(final String name, final Iterable<String> values) {

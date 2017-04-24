@@ -21,8 +21,8 @@ public abstract class AbstractCloseableMockHttpServer implements CloseableMockHt
     private final MockInteractions<RequestWrapper> interactions;
 
     protected AbstractCloseableMockHttpServer() {
-        this.behaviour = new MockBehaviour<>();
-        this.interactions = new MockInteractions<>();
+        behaviour = new MockBehaviour<>();
+        interactions = new MockInteractions<>();
     }
 
     @Override

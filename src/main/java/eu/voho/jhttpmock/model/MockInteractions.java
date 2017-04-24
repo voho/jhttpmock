@@ -13,7 +13,7 @@ public class MockInteractions<T> {
     private final List<T> history;
 
     public MockInteractions() {
-        this.history = new LinkedList<>();
+        history = new LinkedList<>();
     }
 
     public List<T> find(final Predicate<T> rule) {

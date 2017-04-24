@@ -15,11 +15,11 @@ public class MockBehaviour<P, A> {
     private final Deque<MockBehaviourRule> rules;
 
     public MockBehaviour() {
-        this.rules = new LinkedList<>();
+        rules = new LinkedList<>();
     }
 
     void addRule(final Predicate<P> requestStubbingData, final Consumer<A> responseStubbingData) {
-        this.rules.addFirst(new MockBehaviourRule(requestStubbingData, responseStubbingData));
+        rules.addFirst(new MockBehaviourRule(requestStubbingData, responseStubbingData));
     }
 
     public boolean applyBestMatchingRule(final P request, final A response) {
@@ -34,7 +34,7 @@ public class MockBehaviour<P, A> {
     }
 
     public void reset() {
-        this.rules.clear();
+        rules.clear();
     }
 
     private final class MockBehaviourRule {

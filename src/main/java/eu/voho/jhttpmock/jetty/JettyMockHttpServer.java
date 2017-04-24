@@ -19,9 +19,9 @@ public class JettyMockHttpServer extends AbstractCloseableMockHttpServer {
 
     public JettyMockHttpServer(final int port) {
         this.port = port;
-        this.server = new Server(port);
-        this.server.setHandler(createHandler());
-        this.server.setStopAtShutdown(true);
+        server = new Server(port);
+        server.setHandler(createHandler());
+        server.setStopAtShutdown(true);
         startServer();
     }
 
@@ -38,7 +38,7 @@ public class JettyMockHttpServer extends AbstractCloseableMockHttpServer {
 
     private void startServer() {
         try {
-            this.server.start();
+            server.start();
         } catch (Exception e) {
             throw new RuntimeException("Cannot start Jetty server.", e);
         }
@@ -46,7 +46,7 @@ public class JettyMockHttpServer extends AbstractCloseableMockHttpServer {
 
     private void stopServer() {
         try {
-            this.server.stop();
+            server.stop();
         } catch (Exception e) {
             throw new RuntimeException("Cannot stop Jetty server.", e);
         }
