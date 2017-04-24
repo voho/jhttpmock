@@ -5,7 +5,15 @@
 [![JitPack](https://jitpack.io/v/voho/jhttpmock.svg)](https://jitpack.io/#voho/jhttpmock)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/058408fcfc2442729c87ea2889a33668)](https://www.codacy.com/app/vojtech-hordejcuk/jhttpmock?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=voho/jhttpmock&amp;utm_campaign=Badge_Grade)
 
-Mock HTTP Server for Java built with Jetty and JUnit.
+Very simple mock HTTP Server for Java built with Jetty and JUnit. Inspired by [WireMock](https://github.com/tomakehurst/wiremock) and [Jadler](https://github.com/jadler-mocking/jadler).
+
+Key features:
+
+* fast onboarding
+* fluent API
+* latency and failure simulation
+* minimal dependencies, small footprint
+* supports multiple concurrent instances
 
 ## Quick Example
 
@@ -23,10 +31,10 @@ public class BasicUseCase {
         mock
             .onRequest()
             .withUrlEqualTo("/ping")
-            .thenRespond()
+            .thenAlwaysRespond()
             .withCode(200)
             .withRandomDelay(Duration.ofMillis(30), Duration.ofMillis(50))
-            .withBody("Hello!"); 
+            .withBody("Hello!");
                    
         // ...send HTTP GET request...
         
@@ -39,22 +47,6 @@ public class BasicUseCase {
     }
 }
 ```
-
-### Properties you can match the HTTP request on
-
-- method (GET, POST, etc.)
-- URL
-- header(s)
-- query parameter(s)
-- request body 
-
-### Response properties you can set
-
-- status code
-- header(s)
-- cookie(s)
-- response body
-- delay (fixed, random, poisson)
 
 ## Usage
 
