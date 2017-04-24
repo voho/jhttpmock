@@ -16,8 +16,16 @@ public class MockInteractions<T> {
         history = new LinkedList<>();
     }
 
+    public boolean isEmpty() {
+        return history.isEmpty();
+    }
+
     public List<T> find(final Predicate<T> rule) {
         return history.stream().filter(rule).collect(Collectors.toList());
+    }
+
+    public void remove(final T request) {
+        history.remove(request);
     }
 
     public void add(final T request) {

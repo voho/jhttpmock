@@ -71,7 +71,7 @@ public interface RequestStubbing {
         return withUrl(url::equalsIgnoreCase);
     }
 
-    ResponseStubbing thenRespond();
+    ResponseStubbing thenAlwaysRespond();
 
     void wasReceivedTimes(Predicate<Integer> timesMatcher);
 

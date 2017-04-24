@@ -55,7 +55,7 @@ public class VerificationRequestStubbing implements RequestStubbing {
     }
 
     @Override
-    public ResponseStubbing thenRespond() {
+    public ResponseStubbing thenAlwaysRespond() {
         throw new UnsupportedOperationException("Cannot define a response in the verification mode.");
     }
 

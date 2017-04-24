@@ -20,7 +20,7 @@ public class RequestMatcherUsingQueryParameterTest {
         mock
                 .onRequest()
                 .withQueryParameterEqualTo("p1", "v1")
-                .thenRespond()
+                .thenAlwaysRespond()
                 .withCode(200);
 
         TestUtility.executeGetAndVerify(
@@ -48,7 +48,7 @@ public class RequestMatcherUsingQueryParameterTest {
         mock
                 .onRequest()
                 .withQueryParameterEqualTo("p1", "v1")
-                .thenRespond()
+                .thenAlwaysRespond()
                 .withCode(200);
 
         TestUtility.executeGetAndVerify(
