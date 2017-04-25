@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -29,21 +30,46 @@ class ResponseConsumer implements Consumer<ResponseWrapper> {
     private final Map<String, Iterable<String>> headers;
     private final List<Cookie> cookies;
     private Supplier<Duration> delayGenerator;
+    private final Map<ResponseConsumer, Double> alternatives;
 
     ResponseConsumer() {
         code = 200;
         body = new char[0];
         headers = new LinkedHashMap<>();
         cookies = new LinkedList<>();
+        alternatives = new LinkedHashMap<>();
     }
 
     @Override
     public void accept(final ResponseWrapper response) {
-        applyDelay();
-        applyStatus(response);
-        applyHeaders(response);
-        applyCookies(response);
-        addBody(response);
+        if (!applyAlternative(response)) {
+            applyDelay();
+            applyStatus(response);
+            applyHeaders(response);
+            applyCookies(response);
+            writeBody(response);
+        }
+    }
+
+    private boolean applyAlternative(final ResponseWrapper response) {
+        if (!alternatives.isEmpty()) {
+            final double randomProbability = ThreadLocalRandom.current().nextDouble();
+            double cumulativeProbability = 0.0;
+
+            for (final Map.Entry<ResponseConsumer, Double> alternativeEntry : alternatives.entrySet()) {
+                final ResponseConsumer alternative = alternativeEntry.getKey();
+                final Double probability = alternativeEntry.getValue();
+
+                cumulativeProbability += probability;
+
+                if (randomProbability <= cumulativeProbability) {
+                    alternative.accept(response);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private void applyDelay() {
@@ -68,7 +94,7 @@ class ResponseConsumer implements Consumer<ResponseWrapper> {
         cookies.forEach(response::addCookies);
     }
 
-    private void addBody(final ResponseWrapper response) {
+    private void writeBody(final ResponseWrapper response) {
         try {
             response.write(body);
         } catch (IOException e) {
@@ -94,5 +120,19 @@ class ResponseConsumer implements Consumer<ResponseWrapper> {
 
     void setDelayGenerator(final Supplier<Duration> delayGenerator) {
         this.delayGenerator = delayGenerator;
+    }
+
+    void addAlternative(final ResponseConsumer alternative, final double probability) {
+        final double currentProbabilityOfAlternatives = getTotalProbabilityOfAlternatives();
+
+        if (currentProbabilityOfAlternatives + probability >= 1.0) {
+            throw new IllegalStateException("The sum of all alternative probabilities must be less than 1.");
+        }
+
+        alternatives.put(alternative, probability);
+    }
+
+    private double getTotalProbabilityOfAlternatives() {
+        return alternatives.values().stream().reduce((a, b) -> a + b).orElse(0.0);
     }
 }

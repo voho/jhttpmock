@@ -7,9 +7,15 @@ import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BehaviourDefiningResponseStubbing implements ResponseStubbing {
+    private final ResponseConsumer responseConsumerRoot;
     private final ResponseConsumer responseConsumer;
 
     public BehaviourDefiningResponseStubbing(final ResponseConsumer responseConsumer) {
+        this(responseConsumer, responseConsumer);
+    }
+
+    public BehaviourDefiningResponseStubbing(final ResponseConsumer responseConsumerRoot, final ResponseConsumer responseConsumer) {
+        this.responseConsumerRoot = responseConsumerRoot;
         this.responseConsumer = responseConsumer;
     }
 
@@ -33,6 +39,13 @@ public class BehaviourDefiningResponseStubbing implements ResponseStubbing {
         });
 
         return this;
+    }
+
+    @Override
+    public ResponseStubbing orRespondWithProbability(final double probability) {
+        final ResponseConsumer child = new ResponseConsumer();
+        responseConsumerRoot.addAlternative(child, probability);
+        return new BehaviourDefiningResponseStubbing(responseConsumerRoot, child);
     }
 
     @Override

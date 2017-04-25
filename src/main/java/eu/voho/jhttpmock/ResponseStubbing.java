@@ -31,4 +31,6 @@ public interface ResponseStubbing {
     ResponseStubbing withRandomDelay(Duration minDelay, Duration maxDelay);
 
     ResponseStubbing withPoissonRandomDelay(Duration lambda);
+
+    ResponseStubbing orRespondWithProbability(double probability);
 }

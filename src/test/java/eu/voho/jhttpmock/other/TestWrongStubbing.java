@@ -22,4 +22,14 @@ public class TestWrongStubbing {
                 .onRequest()
                 .wasNeverReceived();
     }
+
+    @Test(expected = IllegalStateException.class)
+    public void testWrongProbabilities() {
+        toTest
+                .onRequest()
+                .thenRespond()
+                .orRespondWithProbability(0.2)
+                .orRespondWithProbability(0.3)
+                .orRespondWithProbability(0.5);
+    }
 }

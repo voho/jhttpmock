@@ -26,19 +26,22 @@ public class BasicUseCase {
     
     @Test
     public void test() {
-        // define behaviour
+        // define mock request behaviour
         
         mock
             .onRequest()
             .withUrlEqualTo("/ping")
-            .thenAlwaysRespond()
+            .thenRespond()
             .withCode(200)
             .withRandomDelay(Duration.ofMillis(30), Duration.ofMillis(50))
-            .withBody("Hello!");
-                   
-        // ...send HTTP GET request...
+            .withBody("Hello!")
+            .orRespondWithProbability(0.01)
+            .withCode(503)
+            .withFixedDelay(Duration.ofSeconds(5));
+           
+        // TODO: send HTTP request
         
-        // verify
+        // verify mock server interactions
         
         mock
             .verifyThatRequest()
@@ -73,6 +76,7 @@ Add this to your `pom.xml` file:
 
 ### 1.0 (not yet released)
 
+- added alternatives (e.g. simulating errors with a certain probability)
 - updated readme
 
 ### [0.9-RC1](https://jitpack.io/#voho/jhttpmock/0.9-RC1)
