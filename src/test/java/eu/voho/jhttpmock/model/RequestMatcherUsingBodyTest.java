@@ -24,7 +24,7 @@ public class RequestMatcherUsingBodyTest {
                 .onRequest()
                 .withPostMethod()
                 .withBodyEqualTo(EITHER_BODY)
-                .thenAlwaysRespond()
+                .thenRespond()
                 .withCode(200)
                 .withPoissonRandomDelay(Duration.ofMillis(50));
 
@@ -32,7 +32,7 @@ public class RequestMatcherUsingBodyTest {
                 .onRequest()
                 .withPostMethod()
                 .withBodyEqualTo(ANOTHER_BODY)
-                .thenAlwaysRespond()
+                .thenRespond()
                 .withCode(200)
                 .withPoissonRandomDelay(Duration.ofMillis(50));
 

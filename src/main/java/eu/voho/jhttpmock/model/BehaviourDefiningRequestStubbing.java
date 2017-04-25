@@ -55,7 +55,7 @@ public class BehaviourDefiningRequestStubbing implements RequestStubbing {
     }
 
     @Override
-    public ResponseStubbing thenAlwaysRespond() {
+    public ResponseStubbing thenRespond() {
         return new BehaviourDefiningResponseStubbing(responseConsumer);
     }
 

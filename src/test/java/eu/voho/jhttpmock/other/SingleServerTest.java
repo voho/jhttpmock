@@ -28,7 +28,7 @@ public class SingleServerTest {
         mock
                 .onRequest()
                 .withUrlEqualTo("/ping")
-                .thenAlwaysRespond()
+                .thenRespond()
                 .withCode(201)
                 .withPoissonRandomDelay(Duration.ofMillis(50))
                 .withBody("Hello!");

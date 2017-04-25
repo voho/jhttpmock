@@ -20,7 +20,7 @@ public class RequestMatcherUsingHeaderTest {
         mock
                 .onRequest()
                 .withHeaderEqualTo("h1", "v1")
-                .thenAlwaysRespond()
+                .thenRespond()
                 .withCode(200);
 
         TestUtility.executeGetAndVerify(
@@ -51,7 +51,7 @@ public class RequestMatcherUsingHeaderTest {
         mock
                 .onRequest()
                 .withHeaderEqualTo("h1", "v1")
-                .thenAlwaysRespond()
+                .thenRespond()
                 .withCode(200);
 
         TestUtility.executeGetAndVerify(

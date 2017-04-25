@@ -19,13 +19,13 @@ public class MultipleServersTest {
         mock1
                 .onRequest()
                 .withGetMethod()
-                .thenAlwaysRespond()
+                .thenRespond()
                 .withBody("Hello, this is 1.");
 
         mock2
                 .onRequest()
                 .withGetMethod()
-                .thenAlwaysRespond()
+                .thenRespond()
                 .withBody("Hello, this is 2.");
 
         TestUtility.executeGetAndVerify(

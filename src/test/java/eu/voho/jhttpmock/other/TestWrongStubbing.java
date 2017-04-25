@@ -13,7 +13,7 @@ public class TestWrongStubbing {
     public void testCannotDefineWhileValidating() {
         toTest
                 .verifyThatRequest()
-                .thenAlwaysRespond();
+                .thenRespond();
     }
 
     @Test(expected = UnsupportedOperationException.class)
