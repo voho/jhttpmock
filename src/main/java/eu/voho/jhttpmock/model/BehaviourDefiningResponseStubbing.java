@@ -43,9 +43,9 @@ public class BehaviourDefiningResponseStubbing implements ResponseStubbing {
 
     @Override
     public ResponseStubbing orRespondWithProbability(final double probability) {
-        final ResponseConsumer child = new ResponseConsumer();
-        responseConsumerRoot.addAlternative(child, probability);
-        return new BehaviourDefiningResponseStubbing(responseConsumerRoot, child);
+        final ResponseConsumer alternative = new ResponseConsumer();
+        responseConsumerRoot.addAlternative(alternative, probability);
+        return new BehaviourDefiningResponseStubbing(responseConsumerRoot, alternative);
     }
 
     @Override
