@@ -30,7 +30,6 @@ public class RandomlyFailingServerTest {
                 .withUrlEqualTo("/ping")
                 .thenRespond()
                 .withCode(200)
-                .withBody("Hello!")
                 .orRespondWithProbability(0.3)
                 .withCode(500)
                 .orRespondWithProbability(0.6)
