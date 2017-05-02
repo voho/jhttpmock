@@ -15,6 +15,8 @@ Key features:
 * minimal dependencies, small footprint
 * supports multiple concurrent instances
 
+On the contrary, there is no complex response modelling. Why not? I think the test cases should be as simple as possible and it should not be necessary to implement any complex logic.
+
 ## Quick Example
 
 The example is using JHttpMock as a JUnit rule.
