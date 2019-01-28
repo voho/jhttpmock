@@ -6,3 +6,9 @@ jdk:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  
+addons:
+  sonarcloud:
+    organization: "voho-github"
+script:
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
